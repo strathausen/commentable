@@ -51,34 +51,43 @@
 
             <!-- Comments Section -->
             <section class="comments-section">
-                <h2>Comments (#(commentCount))</h2>
+                <div class="section-header">
+                    <h2>Comments (#(commentCount))</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">All</button>
+                        <button class="filter-tab" data-filter="pending">Pending</button>
+                        <button class="filter-tab" data-filter="approved">Approved</button>
+                        <button class="filter-tab" data-filter="rejected">Rejected</button>
+                    </div>
+                </div>
                 #if(count(comments) > 0):
                     <div class="comments-list-detail">
                         #for(comment in comments):
-                            <div class="comment-card-detail">
-                                <div class="comment-meta">
-                                    <span class="comment-status status-#(comment.status)">#(comment.status)</span>
-                                    <span class="comment-page">Page: #(comment.pageUrl)</span>
-                                    <div class="comment-moderation-actions">
+                            <div class="comment-card-detail" data-status="#(comment.status)">
+                                <div class="comment-header-row">
+                                    <div class="comment-left">
+                                        <span class="comment-status status-#(comment.status)">#(comment.status)</span>
+                                        #if(comment.manuallyModerated):
+                                            <span class="manual-badge-inline">Manual</span>
+                                        #endif
+                                        <span class="comment-author-inline">#if(comment.authorName):#(comment.authorName)#else:Anonymous#endif</span>
+                                    </div>
+                                    <div class="comment-right">
+                                        <span class="comment-date-inline">#if(comment.createdAt):#date(comment.createdAt)#endif</span>
+                                    </div>
+                                </div>
+                                <div class="comment-content-main">#(comment.content)</div>
+                                <div class="comment-footer-row">
+                                    <span class="comment-page-inline">#(comment.pageUrl)</span>
+                                    <div class="comment-actions-inline">
                                         #if(comment.status != "approved"):
-                                            <button class="btn-small approve-comment" data-id="#(comment.id)">Approve</button>
+                                            <button class="btn-action approve-comment" data-id="#(comment.id)">Approve</button>
                                         #endif
                                         #if(comment.status != "rejected"):
-                                            <button class="btn-small reject-comment" data-id="#(comment.id)">Reject</button>
+                                            <button class="btn-action reject-comment" data-id="#(comment.id)">Reject</button>
                                         #endif
                                     </div>
                                 </div>
-                                <div class="comment-author">
-                                    Author: #if(comment.authorName):#(comment.authorName)#else:Anonymous#endif
-                                </div>
-                                <div class="comment-content">#(comment.content)</div>
-                                #if(comment.moderationResult):
-                                    <div class="moderation-result">Moderation: #(comment.moderationResult)</div>
-                                #endif
-                                #if(comment.manuallyModerated):
-                                    <div class="manual-badge">✓ Manually moderated</div>
-                                #endif
-                                <div class="comment-date">#if(comment.createdAt):#date(comment.createdAt)#endif</div>
                             </div>
                         #endfor
                     </div>

@@ -202,3 +202,28 @@ document.querySelectorAll('.reject-comment').forEach(btn => {
         }
     };
 });
+
+// Filter comments
+document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.onclick = () => {
+        // Update active tab
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const filter = tab.dataset.filter;
+        const comments = document.querySelectorAll('.comment-card-detail');
+
+        comments.forEach(comment => {
+            if (filter === 'all') {
+                comment.classList.remove('hidden');
+            } else {
+                const status = comment.dataset.status;
+                if (status === filter) {
+                    comment.classList.remove('hidden');
+                } else {
+                    comment.classList.add('hidden');
+                }
+            }
+        });
+    };
+});

@@ -10,7 +10,7 @@
     --primary: #ff6b00;
     --secondary: #00d4ff;
     --danger: #ff0055;
-    --success: #00ff88;
+    --success: #00cc44;
     --border: 4px solid var(--black);
     --shadow: 8px 8px 0 var(--black);
 }
@@ -154,7 +154,9 @@ button:active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .websites-grid {
@@ -372,26 +374,247 @@ a.btn-small:hover {
 .comments-list-detail {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.75rem;
 }
 
 .comment-card-detail {
-    padding: 1.5rem;
-    background: #f5f5f5;
-    border: var(--border);
+    padding: 1rem;
+    background: var(--white);
+    border: 2px solid var(--black);
+    transition: all 0.1s;
 }
 
-.comment-moderation-actions {
+.comment-card-detail:hover {
+    background: #f9f9f9;
+}
+
+.comment-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--black);
+}
+
+.comment-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.comment-right {
+    display: flex;
+    align-items: center;
+}
+
+.comment-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border: 2px solid var(--black);
+    font-weight: bold;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.comment-status.status-pending {
+    background: #fff3cd;
+}
+
+.comment-status.status-approved {
+    background: var(--success);
+}
+
+.comment-status.status-rejected {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.manual-badge-inline {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: var(--secondary);
+    border: 2px solid var(--black);
+    font-weight: bold;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.comment-author-inline {
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.comment-date-inline {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.comment-content-main {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.comment-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.5rem;
+    border-top: 2px solid var(--black);
+}
+
+.comment-page-inline {
+    font-size: 0.8rem;
+    color: #666;
+    word-break: break-all;
+    flex: 1;
+}
+
+.comment-actions-inline {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.btn-action {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    background: var(--white);
+    border: 2px solid var(--black);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.btn-action:hover {
+    background: var(--black);
+    color: var(--white);
+}
+
+.btn-action.approve-comment {
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.btn-action.approve-comment:hover {
+    background: var(--success);
+    color: var(--black);
+}
+
+.btn-action.reject-comment {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.btn-action.reject-comment:hover {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.filter-tabs {
     display: flex;
     gap: 0.5rem;
 }
 
-.manual-badge {
+.filter-tab {
+    padding: 0.5rem 1rem;
+    background: var(--white);
+    border: 2px solid var(--black);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.1s;
+}
+
+.filter-tab:hover {
+    background: #f0f0f0;
+}
+
+.filter-tab.active {
+    background: var(--black);
+    color: var(--white);
+}
+
+.comment-card-detail[data-status].hidden {
+    display: none;
+}
+
+.info-box {
+    padding: 0.75rem 1rem;
+    background: var(--secondary);
+    border: 2px solid var(--black);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.prompts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.prompt-card {
+    padding: 1rem;
+    background: var(--white);
+    border: 2px solid var(--black);
+}
+
+.prompt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--black);
+}
+
+.prompt-status {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: var(--success);
     border: 2px solid var(--black);
     font-weight: bold;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.prompt-status.status-active {
+    background: var(--success);
+}
+
+.prompt-status.status-inactive {
+    background: #ccc;
+}
+
+.prompt-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.prompt-content {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.rerun-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--black);
+}
+
+.help-text {
     margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #666;
 }
