@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link rel="icon" type="image/svg+xml" href="/images/icon.svg">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="/dashboard" class="logo-link">
+                <img src="/images/logo.svg" alt="Commentable" class="logo">
+            </a>
+        </div>
+    </header>
+
+    <div class="error-page">
+        <div class="error-box">
+            <h1 class="error-code">404</h1>
+            <h2 class="error-message">Page Not Found</h2>
+            <p class="error-description">The page you're looking for doesn't exist or has been moved.</p>
+
+            <div class="haiku-box">
+                <div class="haiku-text" id="haiku"></div>
+            </div>
+
+            <a href="/dashboard" class="btn">Go to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        const haikus = [
+            "Users come and go\nTheir words remain forever\nSomewher in the ether",
+            "The post was not found\nEchoes hum through empty threads\nLost replies drift by",
+            "Your words went astray\nFalling through the server void\nNo page to be found",
+            "A link once alive\nNow it hums a quiet tune\nOf things left unsent",
+            "Here, no comments load\nOnly echoes of intent\nTyped but never saved",
+            "Scroll through broken forms\nEach field whispers what was lost\nSubmit fades to null",
+            "Nothing to display\nJust the hum of empty space\nBetween what was said",
+            "A page once existed\nNow it's gone beyond the cache\nMemory expired",
+            "Someone left a note\nBut the page forgot its place\nSilence signs the void",
+        ];
+
+        const randomHaiku = haikus[Math.floor(Math.random() * haikus.length)];
+        document.getElementById('haiku').innerText = randomHaiku;
+    </script>
+</body>
+</html>

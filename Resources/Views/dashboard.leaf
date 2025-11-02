@@ -10,19 +10,47 @@
                 #if(count(websites) > 0):
                     <div class="websites-grid">
                         #for(website in websites):
-                            <a href="/websites/#(website.id)" class="website-card">
-                                <h3>#(website.name)</h3>
-                                <p class="domain">#(website.domain)</p>
-                                <div class="stats">
-                                    <span>#(website.pageCount) pages</span>
-                                    <span>#(website.commentCount) comments</span>
+                            #if(showArchived):
+                                <div class="website-card-archived">
+                                    <div class="card-content">
+                                        <h3>#(website.name)</h3>
+                                        <p class="domain">#(website.domain)</p>
+                                        <div class="stats">
+                                            <span>#(website.pageCount) pages</span>
+                                            <span>#(website.commentCount) comments</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn-small restore-website" data-id="#(website.id)">Restore</button>
                                 </div>
-                            </a>
+                            #else:
+                                <a href="/websites/#(website.id)" class="website-card">
+                                    <h3>#(website.name)</h3>
+                                    <p class="domain">#(website.domain)</p>
+                                    <div class="stats">
+                                        <span>#(website.pageCount) pages</span>
+                                        <span>#(website.commentCount) comments</span>
+                                    </div>
+                                </a>
+                            #endif
                         #endfor
                     </div>
                 #else:
-                    <p class="empty-state">No websites yet. Add your first website to get started!</p>
+                    <p class="empty-state">
+                        #if(showArchived):
+                            No archived websites.
+                        #else:
+                            No websites yet. Add your first website to get started!
+                        #endif
+                    </p>
                 #endif
+
+                <div class="archived-toggle">
+                    #if(showArchived):
+                        <a href="/dashboard" class="archived-link">← Back to active websites</a>
+                    #else:
+                        <a href="/dashboard?archived=true" class="archived-link">View archived websites</a>
+                    #endif
+                </div>
             </section>
         </div>
 
@@ -52,8 +80,28 @@
             const addBtn = document.getElementById('addWebsiteBtn');
             const cancelBtn = document.getElementById('cancelBtn');
 
-            addBtn.onclick = () => modal.style.display = 'flex';
-            cancelBtn.onclick = () => modal.style.display = 'none';
+            if (addBtn) addBtn.onclick = () => modal.style.display = 'flex';
+            if (cancelBtn) cancelBtn.onclick = () => modal.style.display = 'none';
+
+            // Restore website
+            document.querySelectorAll('.restore-website').forEach(btn => {
+                btn.onclick = async () => {
+                    const id = btn.dataset.id;
+                    try {
+                        const response = await fetch(`/websites/${id}/restore`, {
+                            method: 'POST'
+                        });
+
+                        if (response.ok) {
+                            window.location.href = '/dashboard';
+                        } else {
+                            alert('Failed to restore website');
+                        }
+                    } catch (err) {
+                        alert('Network error');
+                    }
+                };
+            });
 
             document.getElementById('addWebsiteForm').addEventListener('submit', async (e) => {
                 e.preventDefault();

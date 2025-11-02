@@ -14,11 +14,11 @@
 
             <!-- Collapsible Embed Code Section -->
             <div class="embed-sticky">
-                <button class="embed-toggle" id="embedToggle">
+                <button class="embed-toggle collapsed" id="embedToggle">
                     <span class="toggle-icon">▼</span>
                     Integration Code
                 </button>
-                <div class="embed-content" id="embedContent">
+                <div class="embed-content collapsed" id="embedContent">
                     <div class="embed-options">
                         <div class="embed-option">
                             <h3>Embed Code (iframe)</h3>

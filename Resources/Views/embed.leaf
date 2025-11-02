@@ -48,12 +48,21 @@
         const form = document.getElementById('commentForm');
         const commentsList = document.getElementById('commentsList');
         const errorDiv = document.getElementById('formError');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const authorNameInput = document.getElementById('authorName');
+        const contentInput = document.getElementById('commentContent');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const authorName = document.getElementById('authorName').value || null;
-            const content = document.getElementById('commentContent').value;
+            const authorName = authorNameInput.value || null;
+            const content = contentInput.value;
+
+            // Disable form
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Posting...';
+            authorNameInput.disabled = true;
+            contentInput.disabled = true;
 
             try {
                 const response = await fetch('/embed/#(websiteId)/comment', {
@@ -77,6 +86,12 @@
                 }
             } catch (err) {
                 errorDiv.textContent = 'Network error';
+            } finally {
+                // Re-enable form
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Post Comment';
+                authorNameInput.disabled = false;
+                contentInput.disabled = false;
             }
         });
     </script>

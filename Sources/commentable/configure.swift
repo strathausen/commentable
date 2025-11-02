@@ -9,6 +9,9 @@ public func configure(_ app: Application) async throws {
     // Serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
+    // Custom error middleware
+    app.middleware.use(CustomErrorMiddleware())
+
     // Session middleware
     app.middleware.use(app.sessions.middleware)
 
@@ -30,6 +33,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateModerationPrompt())
     app.migrations.add(AddManuallyModeratedToComment())
     app.migrations.add(RenamePageUrlToPath())
+    app.migrations.add(AddArchivedToWebsite())
     app.migrations.add(CreateTodo())
 
     app.views.use(.leaf)

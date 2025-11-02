@@ -17,6 +17,9 @@ final class Website: Model, @unchecked Sendable {
     @Field(key: "domain")
     var domain: String
 
+    @Field(key: "archived")
+    var archived: Bool
+
     @Timestamp(key: "created_at", on: .create)
     var createdAt: Date?
 
@@ -28,11 +31,12 @@ final class Website: Model, @unchecked Sendable {
 
     init() { }
 
-    init(id: UUID? = nil, userID: UUID, name: String, domain: String) {
+    init(id: UUID? = nil, userID: UUID, name: String, domain: String, archived: Bool = false) {
         self.id = id
         self.$user.id = userID
         self.name = name
         self.domain = domain
+        self.archived = archived
     }
 
     func toDTO() -> WebsiteDTO {

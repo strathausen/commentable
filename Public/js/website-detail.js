@@ -72,8 +72,6 @@ document.getElementById('editWebsiteForm').addEventListener('submit', async (e) 
 
 // Archive website
 document.getElementById('archiveWebsiteBtn').onclick = async () => {
-    if (!confirm('Archive this website? This will hide it from your dashboard.')) return;
-
     try {
         const response = await fetch(`/websites/${websiteId}/archive`, {
             method: 'POST'

@@ -50,6 +50,7 @@ body {
 
 .logo {
     height: 40px;
+    width: auto;
     display: block;
 }
 
@@ -199,6 +200,7 @@ button:active {
 
 .page-header h1 {
     margin-bottom: 0.5rem;
+    font-size: 2rem;
 }
 
 .page-header .domain {
@@ -274,6 +276,59 @@ button:active {
 
 .website-card .stats span {
     font-weight: bold;
+}
+
+.website-card-archived {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: #f5f5f5;
+    border: 2px solid var(--black);
+    text-decoration: none;
+    color: var(--black);
+}
+
+.website-card-archived .card-content {
+    flex: 1;
+}
+
+.website-card-archived h3 {
+    margin-bottom: 0.5rem;
+}
+
+.website-card-archived .domain {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.website-card-archived .stats {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-top: 2px solid var(--black);
+}
+
+.website-card-archived .stats span {
+    font-weight: bold;
+}
+
+.archived-toggle {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.archived-link {
+    color: #999;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: lowercase;
+    transition: color 0.2s;
+}
+
+.archived-link:hover {
+    color: var(--black);
 }
 
 .empty-state {
@@ -679,7 +734,6 @@ a.btn-small:hover {
     padding: 1rem 1.5rem;
     background: #f5f5f5;
     border: none;
-    border-bottom: 2px solid var(--black);
     font-family: 'Courier New', monospace;
     font-weight: bold;
     text-transform: uppercase;
@@ -693,6 +747,10 @@ a.btn-small:hover {
 
 .embed-toggle:hover {
     background: #e8e8e8;
+}
+
+.embed-toggle:not(.collapsed) {
+    border-bottom: 2px solid var(--black);
 }
 
 .toggle-icon {
@@ -759,4 +817,57 @@ a.btn-small:hover {
 
 .tab-content.active {
     display: block;
+}
+
+/* Error Page */
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    padding: 2rem;
+}
+
+.error-box {
+    text-align: center;
+    max-width: 600px;
+    padding: 3rem;
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow);
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1;
+    color: var(--primary);
+    text-shadow: 4px 4px 0 var(--black);
+}
+
+.error-message {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    text-transform: uppercase;
+}
+
+.error-description {
+    font-size: 1rem;
+    margin: 1rem 0;
+    color: #666;
+}
+
+.haiku-box {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border: 2px solid var(--black);
+}
+
+.haiku-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    white-space: pre-line;
+    font-style: italic;
+    color: #666;
 }

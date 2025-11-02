@@ -14,8 +14,12 @@ struct DashboardController: RouteCollection {
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
 
+        // Check if showing archived
+        let showArchived = (try? req.query.get(Bool.self, at: "archived")) ?? false
+
         let websites = try await Website.query(on: req.db)
             .filter(\.$user.$id == userID)
+            .filter(\.$archived == showArchived)
             .with(\.$pages) { page in
                 page.with(\.$comments)
             }
@@ -32,6 +36,7 @@ struct DashboardController: RouteCollection {
                 "domain": website.domain,
                 "pageCount": pageCount,
                 "commentCount": commentCount,
+                "archived": website.archived,
                 "embedCode": generateEmbedCode(websiteID: website.id?.uuidString ?? "", req: req)
             ]
         }
@@ -39,20 +44,22 @@ struct DashboardController: RouteCollection {
         struct DashboardContext: Encodable {
             let user: UserDTO
             let websites: [[String: Any]]
+            let showArchived: Bool
 
             func encode(to encoder: any Encoder) throws {
                 var container = encoder.container(keyedBy: CodingKeys.self)
                 try container.encode(user, forKey: .user)
+                try container.encode(showArchived, forKey: .showArchived)
                 // Encode websites as unstructured data
                 try container.encode(AnyCodable(websites), forKey: .websites)
             }
 
             enum CodingKeys: String, CodingKey {
-                case user, websites
+                case user, websites, showArchived
             }
         }
 
-        let context = DashboardContext(user: user.toDTO(), websites: websitesData)
+        let context = DashboardContext(user: user.toDTO(), websites: websitesData, showArchived: showArchived)
         return try await req.view.render("dashboard", context)
     }
 

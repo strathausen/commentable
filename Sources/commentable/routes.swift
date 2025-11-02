@@ -17,4 +17,9 @@ func routes(_ app: Application) throws {
 
     // Keep old todo controller if needed
     try app.register(collection: TodoController())
+
+    // Catch-all 404 route (must be last)
+    app.get("**") { req async throws -> View in
+        return try await req.view.render("404")
+    }
 }
