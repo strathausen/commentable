@@ -250,3 +250,52 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
         });
     };
 });
+
+// Style tab
+const saveStyleBtn = document.getElementById('saveStyleBtn');
+if (saveStyleBtn) {
+    const styleRadios = document.querySelectorAll('input[name="style"]');
+    const previewFrame = document.getElementById('stylePreviewFrame');
+    const styleOptions = document.querySelectorAll('.style-option');
+
+    // Update preview when style changes
+    styleRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            const selectedStyle = radio.value;
+            previewFrame.src = `/embed/${websiteId}?path=/preview&style=${selectedStyle}`;
+
+            // Update active state
+            styleOptions.forEach(opt => opt.classList.remove('active'));
+            radio.closest('.style-option').classList.add('active');
+        });
+    });
+
+    // Save style
+    saveStyleBtn.onclick = async () => {
+        const selectedStyle = document.querySelector('input[name="style"]:checked').value;
+        const errorDiv = document.getElementById('styleError');
+
+        try {
+            const response = await fetch(`/websites/${websiteId}/style`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ style: selectedStyle })
+            });
+
+            if (response.ok) {
+                errorDiv.style.display = 'none';
+                saveStyleBtn.textContent = 'Saved!';
+                setTimeout(() => {
+                    saveStyleBtn.textContent = 'Save Style';
+                }, 2000);
+            } else {
+                const error = await response.json();
+                errorDiv.textContent = error.reason || 'Failed to save style';
+                errorDiv.style.display = 'block';
+            }
+        } catch (err) {
+            errorDiv.textContent = 'Network error';
+            errorDiv.style.display = 'block';
+        }
+    };
+}

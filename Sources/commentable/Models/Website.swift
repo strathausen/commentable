@@ -20,6 +20,9 @@ final class Website: Model, @unchecked Sendable {
     @Field(key: "archived")
     var archived: Bool
 
+    @Field(key: "style")
+    var style: String
+
     @Timestamp(key: "created_at", on: .create)
     var createdAt: Date?
 
@@ -31,12 +34,13 @@ final class Website: Model, @unchecked Sendable {
 
     init() { }
 
-    init(id: UUID? = nil, userID: UUID, name: String, domain: String, archived: Bool = false) {
+    init(id: UUID? = nil, userID: UUID, name: String, domain: String, archived: Bool = false, style: String = "commentable") {
         self.id = id
         self.$user.id = userID
         self.name = name
         self.domain = domain
         self.archived = archived
+        self.style = style
     }
 
     func toDTO() -> WebsiteDTO {
@@ -45,6 +49,7 @@ final class Website: Model, @unchecked Sendable {
             userId: self.$user.id,
             name: self.$name.value,
             domain: self.$domain.value,
+            style: self.$style.value,
             createdAt: self.createdAt
         )
     }

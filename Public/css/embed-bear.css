@@ -1,0 +1,146 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #ffffff;
+    --text: #444;
+    --heading: #222;
+    --link: #3273dc;
+    --border: #e0e0e0;
+}
+
+body {
+    font-family: Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 20px;
+}
+
+.comments-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.comments-title {
+    font-size: 1.5rem;
+    font-weight: normal;
+    margin-bottom: 1.5rem;
+    color: var(--heading);
+}
+
+/* Comment Form */
+.comment-form {
+    margin-bottom: 2rem;
+}
+
+.comment-input,
+.comment-textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-family: Verdana, sans-serif;
+    font-size: 14px;
+}
+
+.comment-input:focus,
+.comment-textarea:focus {
+    outline: none;
+    border-color: var(--link);
+}
+
+.comment-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.comment-submit,
+button {
+    padding: 10px 20px;
+    background: var(--link);
+    color: #ffffff;
+    border: none;
+    font-family: Verdana, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.comment-submit:hover,
+button:hover {
+    opacity: 0.9;
+}
+
+.comment-submit:disabled,
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Comments List */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.comment-item {
+    padding: 0;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: var(--heading);
+}
+
+.comment-date {
+    font-size: 13px;
+    color: #999;
+}
+
+.comment-content {
+    word-wrap: break-word;
+    line-height: 1.5;
+}
+
+/* Error Messages */
+.error {
+    color: #c00;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #fcc;
+    background: #fee;
+    display: none;
+}
+
+.error:not(:empty) {
+    display: block;
+}
+
+/* Embed Footer */
+.embed-footer {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.embed-footer a {
+    color: #999;
+    text-decoration: none;
+    font-size: 12px;
+    transition: color 0.2s;
+}
+
+.embed-footer a:hover {
+    color: var(--link);
+}

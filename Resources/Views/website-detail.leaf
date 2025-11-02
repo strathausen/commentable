@@ -40,6 +40,7 @@
                 <button class="tab-button active" data-tab="comments">Comments</button>
                 <button class="tab-button" data-tab="moderation">Moderation</button>
                 <button class="tab-button" data-tab="pages">Pages</button>
+                <button class="tab-button" data-tab="style">Style</button>
             </nav>
 
             <!-- Comments Tab -->
@@ -149,6 +150,52 @@
                     #else:
                         <p class="empty-state">No pages yet. Pages are created automatically when the embed is used.</p>
                     #endif
+                </section>
+            </div>
+
+            <!-- Style Tab -->
+            <div class="tab-content" id="tab-style">
+                <section class="style-section">
+                    <div class="style-selector-container">
+                        <div class="style-options">
+                            <h2>Choose a Style</h2>
+                            <p class="style-description">Select a pre-designed theme for your comment widget.</p>
+
+                            <div class="style-list">
+                                <label class="style-option #if(website.style == "commentable"):active#endif">
+                                    <input type="radio" name="style" value="commentable" #if(website.style == "commentable"):checked#endif>
+                                    <div class="style-preview-small">
+                                        <div class="style-name">Commentable</div>
+                                        <div class="style-tags">Courier New • Bold borders • Shadows</div>
+                                    </div>
+                                </label>
+
+                                <label class="style-option #if(website.style == "sleek"):active#endif">
+                                    <input type="radio" name="style" value="sleek" #if(website.style == "sleek"):checked#endif>
+                                    <div class="style-preview-small">
+                                        <div class="style-name">Sleek</div>
+                                        <div class="style-tags">Vollkorn • Yellow tint • Elegant</div>
+                                    </div>
+                                </label>
+
+                                <label class="style-option #if(website.style == "bear"):active#endif">
+                                    <input type="radio" name="style" value="bear" #if(website.style == "bear"):checked#endif>
+                                    <div class="style-preview-small">
+                                        <div class="style-name">Bear</div>
+                                        <div class="style-tags">Verdana • Minimal • Clean</div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <button id="saveStyleBtn" class="btn">Save Style</button>
+                            <div id="styleError" class="error"></div>
+                        </div>
+
+                        <div class="style-preview-live">
+                            <h3>Live Preview</h3>
+                            <iframe id="stylePreviewFrame" src="/embed/#(website.id)?path=/preview&style=#(website.style)" frameborder="0"></iframe>
+                        </div>
+                    </div>
                 </section>
             </div>
         </div>

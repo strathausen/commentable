@@ -6,6 +6,7 @@ struct WebsiteDTO: Content {
     var userId: UUID?
     var name: String?
     var domain: String?
+    var style: String?
     var createdAt: Date?
 }
 

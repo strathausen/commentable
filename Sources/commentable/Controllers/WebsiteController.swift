@@ -14,6 +14,7 @@ struct WebsiteController: RouteCollection {
             website.delete(use: self.delete)
             website.post("archive", use: self.archive)
             website.post("restore", use: self.restore)
+            website.patch("style", use: self.updateStyle)
             website.get("pages", use: self.pages)
             website.get("comments", use: self.comments)
             website.post("comments", ":commentID", "moderate", use: self.moderateComment)
@@ -259,6 +260,36 @@ struct WebsiteController: RouteCollection {
         }
 
         website.archived = false
+        try await website.save(on: req.db)
+        return .noContent
+    }
+
+    @Sendable
+    func updateStyle(req: Request) async throws -> HTTPStatus {
+        let user = try req.auth.require(User.self)
+        let userID = try user.requireID()
+
+        guard let website = try await Website.find(req.parameters.get("websiteID"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        guard website.$user.id == userID else {
+            throw Abort(.forbidden)
+        }
+
+        struct UpdateStyleRequest: Content {
+            let style: String
+        }
+
+        let updateData = try req.content.decode(UpdateStyleRequest.self)
+
+        // Validate style
+        let validStyles = ["commentable", "sleek", "bear"]
+        guard validStyles.contains(updateData.style) else {
+            throw Abort(.badRequest, reason: "Invalid style")
+        }
+
+        website.style = updateData.style
         try await website.save(on: req.db)
         return .noContent
     }

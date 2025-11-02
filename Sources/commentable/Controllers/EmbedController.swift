@@ -50,19 +50,24 @@ struct EmbedController: RouteCollection {
             )
         }
 
+        // Get style from query parameter or use website default
+        let style = (try? req.query.get(String.self, at: "style")) ?? website.style
+
         // Render the embed view
         struct EmbedContext: Encodable {
             let websiteId: String
             let path: String
             let comments: [PublicCommentDTO]
             let websiteDomain: String
+            let style: String
         }
 
         let context = EmbedContext(
             websiteId: websiteID.uuidString,
             path: path,
             comments: publicComments,
-            websiteDomain: website.domain
+            websiteDomain: website.domain,
+            style: style
         )
         return try await req.view.render("embed", context).encodeResponse(for: req)
     }
