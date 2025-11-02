@@ -52,6 +52,10 @@
         const authorNameInput = document.getElementById('authorName');
         const contentInput = document.getElementById('commentContent');
 
+        // Check if we're in preview mode
+        const urlParams = new URLSearchParams(window.location.search);
+        const isPreview = urlParams.get('preview') === 'true';
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -64,34 +68,68 @@
             authorNameInput.disabled = true;
             contentInput.disabled = true;
 
-            try {
-                const response = await fetch('/embed/#(websiteId)/comment', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        path: '#(path)',
-                        authorName,
-                        content
-                    })
+            if (isPreview) {
+                // Client-side only for preview
+                const now = new Date();
+                const timeString = now.toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
                 });
 
-                if (response.ok) {
-                    const html = await response.text();
-                    commentsList.insertAdjacentHTML('afterbegin', html);
-                    form.reset();
-                    errorDiv.textContent = '';
-                } else {
-                    const error = await response.json();
-                    errorDiv.textContent = error.reason || 'Failed to post comment';
-                }
-            } catch (err) {
-                errorDiv.textContent = 'Network error';
-            } finally {
+                const commentHtml = `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">${authorName || 'Anonymous'}</span>
+                            <span class="comment-date">${timeString}</span>
+                        </div>
+                        <p class="comment-content">${content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+                    </div>
+                `;
+
+                commentsList.insertAdjacentHTML('afterbegin', commentHtml);
+                form.reset();
+                errorDiv.textContent = '';
+
                 // Re-enable form
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Post Comment';
                 authorNameInput.disabled = false;
                 contentInput.disabled = false;
+            } else {
+                // Normal server-side posting
+                try {
+                    const response = await fetch('/embed/#(websiteId)/comment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            path: '#(path)',
+                            authorName,
+                            content
+                        })
+                    });
+
+                    if (response.ok) {
+                        const html = await response.text();
+                        commentsList.insertAdjacentHTML('afterbegin', html);
+                        form.reset();
+                        errorDiv.textContent = '';
+                    } else {
+                        const error = await response.json();
+                        errorDiv.textContent = error.reason || 'Failed to post comment';
+                    }
+                } catch (err) {
+                    errorDiv.textContent = 'Network error';
+                } finally {
+                    // Re-enable form
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Post Comment';
+                    authorNameInput.disabled = false;
+                    contentInput.disabled = false;
+                }
             }
         });
     </script>

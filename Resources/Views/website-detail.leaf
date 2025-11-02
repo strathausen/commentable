@@ -193,7 +193,7 @@
 
                         <div class="style-preview-live">
                             <h3>Live Preview</h3>
-                            <iframe id="stylePreviewFrame" src="/embed/#(website.id)?path=/preview&style=#(website.style)" frameborder="0"></iframe>
+                            <iframe id="stylePreviewFrame" src="/embed/#(website.id)?path=/preview&style=#(website.style)&preview=true" frameborder="0"></iframe>
                         </div>
                     </div>
                 </section>

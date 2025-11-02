@@ -262,7 +262,7 @@ if (saveStyleBtn) {
     styleRadios.forEach(radio => {
         radio.addEventListener('change', () => {
             const selectedStyle = radio.value;
-            previewFrame.src = `/embed/${websiteId}?path=/preview&style=${selectedStyle}`;
+            previewFrame.src = `/embed/${websiteId}?path=/preview&style=${selectedStyle}&preview=true`;
 
             // Update active state
             styleOptions.forEach(opt => opt.classList.remove('active'));
