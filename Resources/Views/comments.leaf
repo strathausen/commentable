@@ -1,0 +1,132 @@
+#extend("base"):
+    #export("body"):
+        <div class="container">
+            <header class="dashboard-header">
+                <div>
+                    <h1>Comments</h1>
+                    <p>Website: #(website.name)</p>
+                </div>
+                <div class="user-info">
+                    <a href="/dashboard" class="btn-small">Back to Dashboard</a>
+                    <span>#(user.email)</span>
+                </div>
+            </header>
+
+            <section class="comments-section">
+                #if(count(comments) > 0):
+                    <div class="comments-table">
+                        #for(comment in comments):
+                            <div class="comment-card">
+                                <div class="comment-meta">
+                                    <span class="comment-status status-#(comment.status)">#(comment.status)</span>
+                                    <span class="comment-page">Page: #(comment.pageUrl)</span>
+                                </div>
+                                <div class="comment-author">
+                                    Author: #if(comment.authorName):#(comment.authorName)#else:Anonymous#endif
+                                </div>
+                                <div class="comment-content">
+                                    #(comment.content)
+                                </div>
+                                #if(comment.moderationResult):
+                                    <div class="moderation-result">
+                                        Moderation: #(comment.moderationResult)
+                                    </div>
+                                #endif
+                                <div class="comment-date">
+                                    #if(comment.createdAt):#date(comment.createdAt)#endif
+                                </div>
+                            </div>
+                        #endfor
+                    </div>
+                #else:
+                    <p class="empty-state">No comments yet.</p>
+                #endif
+            </section>
+        </div>
+
+        <style>
+            .comments-section {
+                margin-top: 2rem;
+            }
+
+            .comments-table {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .comment-card {
+                padding: 1.5rem;
+                background: var(--white);
+                border: var(--border);
+                box-shadow: var(--shadow);
+            }
+
+            .comment-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid var(--black);
+            }
+
+            .comment-status {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                font-weight: bold;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+                border: 2px solid var(--black);
+            }
+
+            .status-approved {
+                background: var(--success);
+                color: var(--black);
+            }
+
+            .status-pending {
+                background: var(--secondary);
+                color: var(--black);
+            }
+
+            .status-rejected {
+                background: var(--danger);
+                color: var(--white);
+            }
+
+            .comment-page {
+                font-size: 0.9rem;
+                color: #666;
+            }
+
+            .comment-author {
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+            }
+
+            .comment-content {
+                padding: 1rem;
+                background: #f5f5f5;
+                border: 2px solid var(--black);
+                margin: 0.5rem 0;
+                word-wrap: break-word;
+            }
+
+            .moderation-result {
+                margin-top: 0.5rem;
+                padding: 0.5rem;
+                background: #fff3cd;
+                border: 2px solid var(--black);
+                font-size: 0.9rem;
+            }
+
+            .comment-date {
+                margin-top: 0.5rem;
+                font-size: 0.85rem;
+                color: #666;
+                text-align: right;
+            }
+        </style>
+    #endexport
+#endextend

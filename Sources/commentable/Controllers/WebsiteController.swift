@@ -88,7 +88,7 @@ struct WebsiteController: RouteCollection {
     }
 
     @Sendable
-    func pages(req: Request) async throws -> [PageWithCommentsDTO] {
+    func pages(req: Request) async throws -> View {
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
 
@@ -105,7 +105,7 @@ struct WebsiteController: RouteCollection {
             .with(\.$comments)
             .all()
 
-        return pages.map { page in
+        let pagesData = pages.map { page in
             PageWithCommentsDTO(
                 id: page.id,
                 url: page.url,
@@ -113,10 +113,24 @@ struct WebsiteController: RouteCollection {
                 commentCount: page.comments.count
             )
         }
+
+        struct PagesContext: Encodable {
+            let user: UserDTO
+            let website: WebsiteDTO
+            let pages: [PageWithCommentsDTO]
+        }
+
+        let context = PagesContext(
+            user: user.toDTO(),
+            website: website.toDTO(),
+            pages: pagesData
+        )
+
+        return try await req.view.render("pages", context)
     }
 
     @Sendable
-    func comments(req: Request) async throws -> [CommentDTO] {
+    func comments(req: Request) async throws -> View {
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
 
@@ -130,15 +144,45 @@ struct WebsiteController: RouteCollection {
 
         let pages = try await Page.query(on: req.db)
             .filter(\.$website.$id == website.requireID())
+            .with(\.$comments)
             .all()
 
-        let pageIDs = try pages.map { try $0.requireID() }
+        struct CommentWithPage: Encodable {
+            let id: UUID?
+            let pageUrl: String
+            let authorName: String?
+            let content: String
+            let status: String
+            let moderationResult: String?
+            let createdAt: Date?
+        }
 
-        let comments = try await Comment.query(on: req.db)
-            .filter(\.$page.$id ~~ pageIDs)
-            .sort(\.$createdAt, .descending)
-            .all()
+        let commentsWithPages = pages.flatMap { page -> [CommentWithPage] in
+            page.comments.map { comment in
+                CommentWithPage(
+                    id: comment.id,
+                    pageUrl: page.url,
+                    authorName: comment.authorName,
+                    content: comment.content,
+                    status: comment.status.rawValue,
+                    moderationResult: comment.moderationResult,
+                    createdAt: comment.createdAt
+                )
+            }
+        }.sorted { ($0.createdAt ?? Date.distantPast) > ($1.createdAt ?? Date.distantPast) }
 
-        return comments.map { $0.toDTO() }
+        struct CommentsContext: Encodable {
+            let user: UserDTO
+            let website: WebsiteDTO
+            let comments: [CommentWithPage]
+        }
+
+        let context = CommentsContext(
+            user: user.toDTO(),
+            website: website.toDTO(),
+            comments: commentsWithPages
+        )
+
+        return try await req.view.render("comments", context)
     }
 }

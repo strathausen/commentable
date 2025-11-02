@@ -1,0 +1,74 @@
+#extend("base"):
+    #export("body"):
+        <div class="container">
+            <header class="dashboard-header">
+                <div>
+                    <h1>Pages</h1>
+                    <p>Website: #(website.name)</p>
+                </div>
+                <div class="user-info">
+                    <a href="/dashboard" class="btn-small">Back to Dashboard</a>
+                    <span>#(user.email)</span>
+                </div>
+            </header>
+
+            <section class="pages-section">
+                #if(count(pages) > 0):
+                    <div class="pages-grid">
+                        #for(page in pages):
+                            <div class="page-card">
+                                <h3>#(page.url)</h3>
+                                <div class="page-stats">
+                                    <span>#(page.commentCount) comments</span>
+                                </div>
+                                <div class="page-date">
+                                    Created: #if(page.createdAt):#date(page.createdAt)#endif
+                                </div>
+                            </div>
+                        #endfor
+                    </div>
+                #else:
+                    <p class="empty-state">No pages yet. Pages are created automatically when the embed code is used.</p>
+                #endif
+            </section>
+        </div>
+
+        <style>
+            .pages-section {
+                margin-top: 2rem;
+            }
+
+            .pages-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 2rem;
+            }
+
+            .page-card {
+                padding: 1.5rem;
+                background: var(--white);
+                border: var(--border);
+                box-shadow: var(--shadow);
+            }
+
+            .page-card h3 {
+                word-wrap: break-word;
+                color: var(--primary);
+                margin-bottom: 1rem;
+            }
+
+            .page-stats {
+                padding: 0.5rem 0;
+                border-top: 2px solid var(--black);
+                border-bottom: 2px solid var(--black);
+                margin: 1rem 0;
+                font-weight: bold;
+            }
+
+            .page-date {
+                font-size: 0.85rem;
+                color: #666;
+            }
+        </style>
+    #endexport
+#endextend

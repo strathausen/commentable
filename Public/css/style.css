@@ -5,7 +5,7 @@
 }
 
 :root {
-    --black: #000000;
+    --black: #222222;
     --white: #ffffff;
     --primary: #ff6b00;
     --secondary: #00d4ff;
@@ -89,7 +89,9 @@ h3 {
 
 /* Buttons */
 .btn,
-.btn-small {
+.btn-small,
+button.btn,
+button {
     display: inline-block;
     padding: 0.75rem 1.5rem;
     background: var(--primary);
@@ -102,16 +104,23 @@ h3 {
     cursor: pointer;
     text-decoration: none;
     transition: all 0.1s;
+    font-size: 1rem;
 }
 
 .btn:hover,
-.btn-small:hover {
+.btn-small:hover,
+button.btn:hover,
+button:hover {
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0 var(--black);
+    color: var(--black);
+    background: var(--primary);
 }
 
 .btn:active,
-.btn-small:active {
+.btn-small:active,
+button.btn:active,
+button:active {
     transform: translate(4px, 4px);
     box-shadow: 0 0 0 var(--black);
 }
@@ -277,4 +286,10 @@ a {
 
 a:hover {
     color: var(--primary);
+}
+
+/* Override link hover for buttons */
+a.btn:hover,
+a.btn-small:hover {
+    color: var(--black);
 }

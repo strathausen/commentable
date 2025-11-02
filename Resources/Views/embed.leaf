@@ -29,7 +29,13 @@
 
         <div id="commentsList" class="comments-list">
             #for(comment in comments):
-                #inline("comment-item", comment)
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">#if(comment.authorName):#(comment.authorName)#else:Anonymous#endif</span>
+                        <span class="comment-date">#if(comment.createdAt):#date(comment.createdAt)#endif</span>
+                    </div>
+                    <p class="comment-content">#(comment.content)</p>
+                </div>
             #endfor
         </div>
     </div>
