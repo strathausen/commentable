@@ -35,14 +35,18 @@ final class Comment: Model, @unchecked Sendable {
     @Timestamp(key: "moderated_at", on: .none)
     var moderatedAt: Date?
 
+    @Field(key: "manually_moderated")
+    var manuallyModerated: Bool
+
     init() { }
 
-    init(id: UUID? = nil, pageID: UUID, authorName: String?, content: String, status: CommentStatus = .pending) {
+    init(id: UUID? = nil, pageID: UUID, authorName: String?, content: String, status: CommentStatus = .pending, manuallyModerated: Bool = false) {
         self.id = id
         self.$page.id = pageID
         self.authorName = authorName
         self.content = content
         self.status = status
+        self.manuallyModerated = manuallyModerated
     }
 
     func toDTO() -> CommentDTO {
@@ -54,7 +58,8 @@ final class Comment: Model, @unchecked Sendable {
             status: self.$status.value,
             moderationResult: self.moderationResult,
             createdAt: self.createdAt,
-            moderatedAt: self.moderatedAt
+            moderatedAt: self.moderatedAt,
+            manuallyModerated: self.manuallyModerated
         )
     }
 }

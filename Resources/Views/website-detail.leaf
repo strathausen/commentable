@@ -1,0 +1,179 @@
+#extend("base"):
+    #export("body"):
+        <div class="container">
+            <header class="dashboard-header">
+                <div>
+                    <h1>#(website.name)</h1>
+                    <p class="domain">#(website.domain)</p>
+                </div>
+                <div class="user-info">
+                    <a href="/dashboard" class="btn-small">Back to Dashboard</a>
+                    <button id="editWebsiteBtn" class="btn-small">Edit</button>
+                    <button id="archiveWebsiteBtn" class="btn-small">Archive</button>
+                    <span>#(user.email)</span>
+                </div>
+            </header>
+
+            <!-- Embed Code Section -->
+            <section class="embed-section">
+                <h2>Integration</h2>
+                <div class="embed-options">
+                    <div class="embed-option">
+                        <h3>Embed Code (iframe)</h3>
+                        <pre><code id="embedCode">#(embedCode)</code></pre>
+                        <button class="btn-small" onclick="copyToClipboard('embedCode')">Copy Embed Code</button>
+                    </div>
+                    <div class="embed-option">
+                        <h3>Standalone Link</h3>
+                        <pre><code id="standaloneLink">#(standaloneLink)</code></pre>
+                        <button class="btn-small" onclick="copyToClipboard('standaloneLink')">Copy Link</button>
+                        <p class="warning">⚠️ Important: Add <code>?url=your-page-url</code> parameter when using this link!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pages Section -->
+            <section class="pages-section">
+                <h2>Pages (#(pageCount))</h2>
+                #if(count(pages) > 0):
+                    <div class="pages-list">
+                        #for(page in pages):
+                            <div class="page-item">
+                                <span class="page-url">#(page.url)</span>
+                                <span class="page-comments">#(page.commentCount) comments</span>
+                            </div>
+                        #endfor
+                    </div>
+                #else:
+                    <p class="empty-state">No pages yet. Pages are created automatically when the embed is used.</p>
+                #endif
+            </section>
+
+            <!-- Comments Section -->
+            <section class="comments-section">
+                <h2>Comments (#(commentCount))</h2>
+                #if(count(comments) > 0):
+                    <div class="comments-list-detail">
+                        #for(comment in comments):
+                            <div class="comment-card-detail">
+                                <div class="comment-meta">
+                                    <span class="comment-status status-#(comment.status)">#(comment.status)</span>
+                                    <span class="comment-page">Page: #(comment.pageUrl)</span>
+                                    <div class="comment-moderation-actions">
+                                        #if(comment.status != "approved"):
+                                            <button class="btn-small approve-comment" data-id="#(comment.id)">Approve</button>
+                                        #endif
+                                        #if(comment.status != "rejected"):
+                                            <button class="btn-small reject-comment" data-id="#(comment.id)">Reject</button>
+                                        #endif
+                                    </div>
+                                </div>
+                                <div class="comment-author">
+                                    Author: #if(comment.authorName):#(comment.authorName)#else:Anonymous#endif
+                                </div>
+                                <div class="comment-content">#(comment.content)</div>
+                                #if(comment.moderationResult):
+                                    <div class="moderation-result">Moderation: #(comment.moderationResult)</div>
+                                #endif
+                                #if(comment.manuallyModerated):
+                                    <div class="manual-badge">✓ Manually moderated</div>
+                                #endif
+                                <div class="comment-date">#if(comment.createdAt):#date(comment.createdAt)#endif</div>
+                            </div>
+                        #endfor
+                    </div>
+                #else:
+                    <p class="empty-state">No comments yet.</p>
+                #endif
+            </section>
+
+            <!-- Moderation Prompts Section -->
+            <section class="prompts-section">
+                <div class="section-header">
+                    <h2>Moderation Prompts (#(promptCount))</h2>
+                    <button id="addPromptBtn" class="btn">Add Prompt</button>
+                </div>
+
+                <div class="info-box">
+                    <p>Custom prompts enforce specific rules for your community in addition to OpenAI's standard moderation.</p>
+                </div>
+
+                #if(count(prompts) > 0):
+                    <div class="prompts-list">
+                        #for(prompt in prompts):
+                            <div class="prompt-card">
+                                <div class="prompt-header">
+                                    <span class="prompt-status status-#if(prompt.isActive):active#else:inactive#endif">
+                                        #if(prompt.isActive):Active#else:Inactive#endif
+                                    </span>
+                                    <div class="prompt-actions">
+                                        <button class="btn-small toggle-prompt" data-id="#(prompt.id)" data-active="#(prompt.isActive)">
+                                            #if(prompt.isActive):Deactivate#else:Activate#endif
+                                        </button>
+                                        <button class="btn-small delete-prompt" data-id="#(prompt.id)">Delete</button>
+                                    </div>
+                                </div>
+                                <div class="prompt-content">#(prompt.prompt)</div>
+                            </div>
+                        #endfor
+                    </div>
+
+                    <div class="rerun-section">
+                        <button id="rerunBtn" class="btn">Re-run Moderation on Pending Comments</button>
+                        <p class="help-text">Re-moderates pending comments. Manually moderated comments will not be affected.</p>
+                    </div>
+                #else:
+                    <p class="empty-state">No moderation prompts yet.</p>
+                #endif
+            </section>
+        </div>
+
+        <!-- Add Prompt Modal -->
+        <div id="addPromptModal" class="modal">
+            <div class="modal-content">
+                <h2>Add Moderation Prompt</h2>
+                <form id="addPromptForm">
+                    <div class="form-group">
+                        <label for="prompt">Prompt</label>
+                        <textarea id="prompt" name="prompt" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="isActive" name="isActive" checked>
+                            Active
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Add</button>
+                        <button type="button" id="cancelPromptBtn" class="btn">Cancel</button>
+                    </div>
+                    <div id="promptError" class="error"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Website Modal -->
+        <div id="editWebsiteModal" class="modal">
+            <div class="modal-content">
+                <h2>Edit Website</h2>
+                <form id="editWebsiteForm">
+                    <div class="form-group">
+                        <label for="editName">Name</label>
+                        <input type="text" id="editName" value="#(website.name)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDomain">Domain</label>
+                        <input type="text" id="editDomain" value="#(website.domain)" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Save</button>
+                        <button type="button" id="cancelEditBtn" class="btn">Cancel</button>
+                    </div>
+                    <div id="editError" class="error"></div>
+                </form>
+            </div>
+        </div>
+
+        <script src="/js/website-detail.js"></script>
+    #endexport
+#endextend

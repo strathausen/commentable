@@ -10,6 +10,7 @@ struct CommentDTO: Content {
     var moderationResult: String?
     var createdAt: Date?
     var moderatedAt: Date?
+    var manuallyModerated: Bool?
 }
 
 struct CreateCommentDTO: Content {

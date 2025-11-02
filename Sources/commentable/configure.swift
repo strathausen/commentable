@@ -28,6 +28,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreatePage())
     app.migrations.add(CreateComment())
     app.migrations.add(CreateModerationPrompt())
+    app.migrations.add(AddManuallyModeratedToComment())
     app.migrations.add(CreateTodo())
 
     app.views.use(.leaf)

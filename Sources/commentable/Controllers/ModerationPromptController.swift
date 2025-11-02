@@ -150,9 +150,10 @@ struct ModerationPromptController: RouteCollection {
         let comments = try await Comment.query(on: req.db)
             .filter(\.$page.$id ~~ pageIDs)
             .filter(\.$status == .pending)
+            .filter(\.$manuallyModerated == false)
             .all()
 
-        // Re-run moderation for each comment
+        // Re-run moderation for each comment (skip manually moderated)
         for comment in comments {
             do {
                 let (approved, result) = try await req.moderation.moderateComment(comment, customPrompts: customPrompts)

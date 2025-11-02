@@ -30,9 +30,7 @@
                                     <pre><code>#(website.embedCode)</code></pre>
                                 </details>
                                 <div class="actions">
-                                    <a href="/websites/#(website.id)/pages" class="btn-small">View Pages</a>
-                                    <a href="/websites/#(website.id)/comments" class="btn-small">View Comments</a>
-                                    <a href="/websites/#(website.id)/moderation-prompts" class="btn-small">Moderation</a>
+                                    <a href="/websites/#(website.id)" class="btn">Manage Website</a>
                                 </div>
                             </div>
                         #endfor
