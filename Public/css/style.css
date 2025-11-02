@@ -20,6 +20,63 @@ body {
     background: var(--white);
     color: var(--black);
     line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main Header */
+.main-header {
+    background: var(--white);
+    border-bottom: var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 40px;
+    display: block;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--black);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid transparent;
+    transition: all 0.1s;
+}
+
+.nav-link:hover {
+    border: 2px solid var(--black);
+}
+
+.nav-user {
+    font-size: 0.9rem;
+    color: #666;
 }
 
 .container {
@@ -130,8 +187,8 @@ button:active {
     font-size: 0.85rem;
 }
 
-/* Dashboard */
-.dashboard-header {
+/* Page Headers */
+.page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -140,9 +197,19 @@ button:active {
     border-bottom: var(--border);
 }
 
-.user-info {
+.page-header h1 {
+    margin-bottom: 0.5rem;
+}
+
+.page-header .domain {
+    color: #666;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.page-actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     align-items: center;
 }
 

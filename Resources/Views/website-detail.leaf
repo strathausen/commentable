@@ -1,16 +1,14 @@
 #extend("base"):
     #export("body"):
         <div class="container">
-            <header class="dashboard-header">
+            <header class="page-header">
                 <div>
                     <h1>#(website.name)</h1>
                     <p class="domain">#(website.domain)</p>
                 </div>
-                <div class="user-info">
-                    <a href="/dashboard" class="btn-small">Back to Dashboard</a>
+                <div class="page-actions">
                     <button id="editWebsiteBtn" class="btn-small">Edit</button>
                     <button id="archiveWebsiteBtn" class="btn-small">Archive</button>
-                    <span>#(user.email)</span>
                 </div>
             </header>
 

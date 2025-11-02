@@ -1,12 +1,8 @@
 #extend("base"):
     #export("body"):
         <div class="container">
-            <header class="dashboard-header">
+            <header class="page-header">
                 <h1>Dashboard</h1>
-                <div class="user-info">
-                    <span>#(user.email)</span>
-                    <button id="logoutBtn" class="btn">Logout</button>
-                </div>
             </header>
 
             <section class="websites-section">
@@ -66,7 +62,6 @@
             const modal = document.getElementById('addWebsiteModal');
             const addBtn = document.getElementById('addWebsiteBtn');
             const cancelBtn = document.getElementById('cancelBtn');
-            const logoutBtn = document.getElementById('logoutBtn');
 
             addBtn.onclick = () => modal.style.display = 'flex';
             cancelBtn.onclick = () => modal.style.display = 'none';
@@ -95,14 +90,6 @@
                 }
             });
 
-            logoutBtn.onclick = async () => {
-                try {
-                    await fetch('/auth/logout', { method: 'POST' });
-                    window.location.href = '/login';
-                } catch (err) {
-                    console.error('Logout failed:', err);
-                }
-            };
         </script>
     #endexport
 #endextend

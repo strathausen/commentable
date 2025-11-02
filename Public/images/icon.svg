@@ -1,0 +1,6 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- C icon with offset shadow -->
+  <rect x="5" y="5" width="24" height="24" fill="#ff6b00"/>
+  <rect x="2" y="2" width="24" height="24" fill="#00d4ff" stroke="#222222" stroke-width="3"/>
+  <path d="M 21 9 L 11 9 L 11 21 L 21 21" stroke="#222222" stroke-width="3" fill="none" stroke-linecap="square"/>
+</svg>

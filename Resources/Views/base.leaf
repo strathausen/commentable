@@ -4,9 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>#if(title):#(title)#else:Commentable#endif</title>
+    <link rel="icon" type="image/svg+xml" href="/images/icon.svg">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="/dashboard" class="logo-link">
+                <img src="/images/logo.svg" alt="Commentable" class="logo">
+            </a>
+            <nav class="main-nav">
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                #if(user):
+                    <span class="nav-user">#(user.email)</span>
+                    <button id="globalLogoutBtn" class="btn-small">Logout</button>
+                #endif
+            </nav>
+        </div>
+    </header>
     #import("body")
+    #if(user):
+        <script>
+            const globalLogoutBtn = document.getElementById('globalLogoutBtn');
+            if (globalLogoutBtn) {
+                globalLogoutBtn.onclick = async () => {
+                    try {
+                        await fetch('/auth/logout', { method: 'POST' });
+                        window.location.href = '/login';
+                    } catch (err) {
+                        console.error('Logout failed:', err);
+                    }
+                };
+            }
+        </script>
+    #endif
 </body>
 </html>
