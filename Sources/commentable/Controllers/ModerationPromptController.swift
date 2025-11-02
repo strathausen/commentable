@@ -29,21 +29,35 @@ struct ModerationPromptController: RouteCollection {
     }
 
     @Sendable
-    func index(req: Request) async throws -> [ModerationPromptDTO] {
+    func index(req: Request) async throws -> View {
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
         guard let websiteID: UUID = req.parameters.get("websiteID") else {
             throw Abort(.badRequest)
         }
 
-        _ = try await verifyWebsiteOwnership(websiteID: websiteID, userID: userID, db: req.db)
+        let website = try await verifyWebsiteOwnership(websiteID: websiteID, userID: userID, db: req.db)
 
         let prompts = try await ModerationPrompt.query(on: req.db)
             .filter(\.$website.$id == websiteID)
             .sort(\.$createdAt, .descending)
             .all()
 
-        return prompts.map { $0.toDTO() }
+        struct ModerationPromptsContext: Encodable {
+            let user: UserDTO
+            let website: WebsiteDTO
+            let prompts: [ModerationPromptDTO]
+            let websiteId: String
+        }
+
+        let context = ModerationPromptsContext(
+            user: user.toDTO(),
+            website: website.toDTO(),
+            prompts: prompts.map { $0.toDTO() },
+            websiteId: websiteID.uuidString
+        )
+
+        return try await req.view.render("moderation-prompts", context)
     }
 
     @Sendable
