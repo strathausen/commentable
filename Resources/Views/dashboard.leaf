@@ -1,10 +1,6 @@
 #extend("base"):
     #export("body"):
         <div class="container">
-            <header class="page-header">
-                <h1>Dashboard</h1>
-            </header>
-
             <section class="websites-section">
                 <div class="section-header">
                     <h2>Your Websites</h2>
@@ -14,21 +10,14 @@
                 #if(count(websites) > 0):
                     <div class="websites-grid">
                         #for(website in websites):
-                            <div class="website-card">
+                            <a href="/websites/#(website.id)" class="website-card">
                                 <h3>#(website.name)</h3>
                                 <p class="domain">#(website.domain)</p>
                                 <div class="stats">
                                     <span>#(website.pageCount) pages</span>
                                     <span>#(website.commentCount) comments</span>
                                 </div>
-                                <details class="embed-code">
-                                    <summary>Embed Code</summary>
-                                    <pre><code>#(website.embedCode)</code></pre>
-                                </details>
-                                <div class="actions">
-                                    <a href="/websites/#(website.id)" class="btn">Manage Website</a>
-                                </div>
-                            </div>
+                            </a>
                         #endfor
                     </div>
                 #else:
