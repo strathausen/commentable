@@ -734,6 +734,7 @@ a.btn-small:hover {
     padding: 1rem 1.5rem;
     background: #f5f5f5;
     border: none;
+    border-bottom: 2px solid var(--black);
     font-family: 'Courier New', monospace;
     font-weight: bold;
     text-transform: uppercase;
@@ -743,14 +744,19 @@ a.btn-small:hover {
     align-items: center;
     gap: 0.5rem;
     transition: background 0.2s;
+    box-shadow: none;
+    transform: none;
 }
 
 .embed-toggle:hover {
     background: #e8e8e8;
+    transform: none;
+    box-shadow: none;
 }
 
-.embed-toggle:not(.collapsed) {
-    border-bottom: 2px solid var(--black);
+.embed-toggle:active {
+    transform: none;
+    box-shadow: none;
 }
 
 .toggle-icon {
