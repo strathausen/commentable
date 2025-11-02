@@ -1,0 +1,48 @@
+#extend("base"):
+    #export("body"):
+        <div class="container">
+            <div class="auth-box">
+                <h1>Login</h1>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                    <div id="error" class="error"></div>
+                </form>
+                <p>Don't have an account? <a href="/register">Register</a></p>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const errorDiv = document.getElementById('error');
+
+                try {
+                    const response = await fetch('/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    if (response.ok) {
+                        window.location.href = '/dashboard';
+                    } else {
+                        const error = await response.json();
+                        errorDiv.textContent = error.reason || 'Login failed';
+                    }
+                } catch (err) {
+                    errorDiv.textContent = 'Network error';
+                }
+            });
+        </script>
+    #endexport
+#endextend

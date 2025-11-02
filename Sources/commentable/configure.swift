@@ -6,18 +6,28 @@ import Vapor
 
 // configures your application
 public func configure(_ app: Application) async throws {
-    // uncomment to serve files from /Public folder
-    // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    // Serve files from /Public folder
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+
+    // Session middleware
+    app.middleware.use(app.sessions.middleware)
 
     app.databases.use(DatabaseConfigurationFactory.postgres(configuration: .init(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? SQLPostgresConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_NAME") ?? "vapor_database",
+        username: Environment.get("DATABASE_USERNAME") ?? "postgres",
+        password: Environment.get("DATABASE_PASSWORD") ?? "",
+        database: Environment.get("DATABASE_NAME") ?? "commentable",
         tls: .prefer(try .init(configuration: .clientDefault)))
     ), as: .psql)
 
+    // Register migrations
+    app.migrations.add(CreateUser())
+    app.migrations.add(CreateUserSession())
+    app.migrations.add(CreateWebsite())
+    app.migrations.add(CreatePage())
+    app.migrations.add(CreateComment())
+    app.migrations.add(CreateModerationPrompt())
     app.migrations.add(CreateTodo())
 
     app.views.use(.leaf)

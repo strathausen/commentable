@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments</title>
+    <link rel="stylesheet" href="/css/embed.css">
+</head>
+<body>
+    <div class="comments-container">
+        <h2 class="comments-title">Comments</h2>
+
+        <form id="commentForm" class="comment-form">
+            <input
+                type="text"
+                id="authorName"
+                placeholder="Your name (optional)"
+                class="comment-input"
+            >
+            <textarea
+                id="commentContent"
+                placeholder="Write your comment..."
+                required
+                class="comment-textarea"
+            ></textarea>
+            <button type="submit" class="comment-submit">Post Comment</button>
+            <div id="formError" class="error"></div>
+        </form>
+
+        <div id="commentsList" class="comments-list">
+            #for(comment in comments):
+                #inline("comment-item", comment)
+            #endfor
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('commentForm');
+        const commentsList = document.getElementById('commentsList');
+        const errorDiv = document.getElementById('formError');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const authorName = document.getElementById('authorName').value || null;
+            const content = document.getElementById('commentContent').value;
+
+            try {
+                const response = await fetch('/embed/#(websiteId)/comment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        url: '#(url)',
+                        authorName,
+                        content
+                    })
+                });
+
+                if (response.ok) {
+                    const html = await response.text();
+                    commentsList.insertAdjacentHTML('beforeend', html);
+                    form.reset();
+                    errorDiv.textContent = '';
+                } else {
+                    const error = await response.json();
+                    errorDiv.textContent = error.reason || 'Failed to post comment';
+                }
+            } catch (err) {
+                errorDiv.textContent = 'Network error';
+            }
+        });
+    </script>
+</body>
+</html>

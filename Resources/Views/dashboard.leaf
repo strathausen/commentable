@@ -1,0 +1,110 @@
+#extend("base"):
+    #export("body"):
+        <div class="container">
+            <header class="dashboard-header">
+                <h1>Dashboard</h1>
+                <div class="user-info">
+                    <span>#(user.email)</span>
+                    <button id="logoutBtn" class="btn">Logout</button>
+                </div>
+            </header>
+
+            <section class="websites-section">
+                <div class="section-header">
+                    <h2>Your Websites</h2>
+                    <button id="addWebsiteBtn" class="btn">Add Website</button>
+                </div>
+
+                #if(count(websites) > 0):
+                    <div class="websites-grid">
+                        #for(website in websites):
+                            <div class="website-card">
+                                <h3>#(website.name)</h3>
+                                <p class="domain">#(website.domain)</p>
+                                <div class="stats">
+                                    <span>#(website.pageCount) pages</span>
+                                    <span>#(website.commentCount) comments</span>
+                                </div>
+                                <details class="embed-code">
+                                    <summary>Embed Code</summary>
+                                    <pre><code>#(website.embedCode)</code></pre>
+                                </details>
+                                <div class="actions">
+                                    <a href="/websites/#(website.id)/pages" class="btn-small">View Pages</a>
+                                    <a href="/websites/#(website.id)/comments" class="btn-small">View Comments</a>
+                                    <a href="/websites/#(website.id)/moderation-prompts" class="btn-small">Moderation</a>
+                                </div>
+                            </div>
+                        #endfor
+                    </div>
+                #else:
+                    <p class="empty-state">No websites yet. Add your first website to get started!</p>
+                #endif
+            </section>
+        </div>
+
+        <div id="addWebsiteModal" class="modal">
+            <div class="modal-content">
+                <h2>Add Website</h2>
+                <form id="addWebsiteForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="domain">Domain</label>
+                        <input type="text" id="domain" name="domain" placeholder="example.com" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Add</button>
+                        <button type="button" id="cancelBtn" class="btn">Cancel</button>
+                    </div>
+                    <div id="error" class="error"></div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            const modal = document.getElementById('addWebsiteModal');
+            const addBtn = document.getElementById('addWebsiteBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            addBtn.onclick = () => modal.style.display = 'flex';
+            cancelBtn.onclick = () => modal.style.display = 'none';
+
+            document.getElementById('addWebsiteForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const domain = document.getElementById('domain').value;
+                const errorDiv = document.getElementById('error');
+
+                try {
+                    const response = await fetch('/websites', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, domain })
+                    });
+
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        const error = await response.json();
+                        errorDiv.textContent = error.reason || 'Failed to add website';
+                    }
+                } catch (err) {
+                    errorDiv.textContent = 'Network error';
+                }
+            });
+
+            logoutBtn.onclick = async () => {
+                try {
+                    await fetch('/auth/logout', { method: 'POST' });
+                    window.location.href = '/login';
+                } catch (err) {
+                    console.error('Logout failed:', err);
+                }
+            };
+        </script>
+    #endexport
+#endextend
