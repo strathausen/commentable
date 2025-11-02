@@ -27,7 +27,7 @@
                         <h3>Standalone Link</h3>
                         <pre><code id="standaloneLink">#(standaloneLink)</code></pre>
                         <button class="btn-small" onclick="copyToClipboard('standaloneLink')">Copy Link</button>
-                        <p class="warning">⚠️ Important: Add <code>?url=your-page-url</code> parameter when using this link!</p>
+                        <p class="warning">⚠️ Important: Add <code>?path=/your-page-path</code> parameter when using this link!</p>
                     </div>
                 </div>
             </section>
@@ -39,7 +39,7 @@
                     <div class="pages-list">
                         #for(page in pages):
                             <div class="page-item">
-                                <span class="page-url">#(page.url)</span>
+                                <span class="page-path">#(page.path)</span>
                                 <span class="page-comments">#(page.commentCount) comments</span>
                             </div>
                         #endfor
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="comment-content-main">#(comment.content)</div>
                                 <div class="comment-footer-row">
-                                    <span class="comment-page-inline">#(comment.pageUrl)</span>
+                                    <span class="comment-page-inline">#(comment.pagePath)</span>
                                     <div class="comment-actions-inline">
                                         #if(comment.status != "approved"):
                                             <button class="btn-action approve-comment" data-id="#(comment.id)">Approve</button>

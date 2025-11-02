@@ -15,8 +15,8 @@ struct EmbedController: RouteCollection {
             throw Abort(.badRequest)
         }
 
-        // Get URL from query parameter
-        let url = try req.query.get(String.self, at: "url")
+        // Get path from query parameter
+        let path = try req.query.get(String.self, at: "path")
 
         guard let website = try await Website.find(websiteID, on: req.db) else {
             throw Abort(.notFound, reason: "Website not found")
@@ -26,11 +26,11 @@ struct EmbedController: RouteCollection {
         let page: Page
         if let existingPage = try await Page.query(on: req.db)
             .filter(\.$website.$id == websiteID)
-            .filter(\.$url == url)
+            .filter(\.$path == path)
             .first() {
             page = existingPage
         } else {
-            page = Page(websiteID: websiteID, url: url)
+            page = Page(websiteID: websiteID, path: path)
             try await page.save(on: req.db)
         }
 
@@ -53,14 +53,14 @@ struct EmbedController: RouteCollection {
         // Render the embed view
         struct EmbedContext: Encodable {
             let websiteId: String
-            let url: String
+            let path: String
             let comments: [PublicCommentDTO]
             let websiteDomain: String
         }
 
         let context = EmbedContext(
             websiteId: websiteID.uuidString,
-            url: url,
+            path: path,
             comments: publicComments,
             websiteDomain: website.domain
         )
@@ -74,7 +74,7 @@ struct EmbedController: RouteCollection {
         }
 
         struct PostCommentRequest: Content {
-            let url: String
+            let path: String
             let authorName: String?
             let content: String
         }
@@ -89,11 +89,11 @@ struct EmbedController: RouteCollection {
         let page: Page
         if let existingPage = try await Page.query(on: req.db)
             .filter(\.$website.$id == websiteID)
-            .filter(\.$url == postRequest.url)
+            .filter(\.$path == postRequest.path)
             .first() {
             page = existingPage
         } else {
-            page = Page(websiteID: websiteID, url: postRequest.url)
+            page = Page(websiteID: websiteID, path: postRequest.path)
             try await page.save(on: req.db)
         }
 

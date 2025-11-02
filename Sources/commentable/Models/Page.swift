@@ -11,8 +11,8 @@ final class Page: Model, @unchecked Sendable {
     @Parent(key: "website_id")
     var website: Website
 
-    @Field(key: "url")
-    var url: String
+    @Field(key: "path")
+    var path: String
 
     @Timestamp(key: "created_at", on: .create)
     var createdAt: Date?
@@ -22,17 +22,17 @@ final class Page: Model, @unchecked Sendable {
 
     init() { }
 
-    init(id: UUID? = nil, websiteID: UUID, url: String) {
+    init(id: UUID? = nil, websiteID: UUID, path: String) {
         self.id = id
         self.$website.id = websiteID
-        self.url = url
+        self.path = path
     }
 
     func toDTO() -> PageDTO {
         .init(
             id: self.id,
             websiteId: self.$website.id,
-            url: self.$url.value,
+            path: self.$path.value,
             createdAt: self.createdAt
         )
     }

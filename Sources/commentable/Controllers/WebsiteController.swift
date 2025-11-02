@@ -79,7 +79,7 @@ struct WebsiteController: RouteCollection {
         let pagesData = pages.map { page in
             PageWithCommentsDTO(
                 id: page.id,
-                url: page.url,
+                path: page.path,
                 createdAt: page.createdAt,
                 commentCount: page.comments.count
             )
@@ -88,7 +88,7 @@ struct WebsiteController: RouteCollection {
         // Load comments with page info
         struct CommentWithPage: Encodable {
             let id: UUID?
-            let pageUrl: String
+            let pagePath: String
             let authorName: String?
             let content: String
             let status: String
@@ -101,7 +101,7 @@ struct WebsiteController: RouteCollection {
             page.comments.map { comment in
                 CommentWithPage(
                     id: comment.id,
-                    pageUrl: page.url,
+                    pagePath: page.path,
                     authorName: comment.authorName,
                     content: comment.content,
                     status: comment.status.rawValue,
@@ -132,7 +132,7 @@ struct WebsiteController: RouteCollection {
 
         let embedCode = """
         <iframe
-          src="\(embedBaseURL)?url="
+          src="\(embedBaseURL)?path="
           width="100%"
           height="600"
           frameborder="0">
@@ -140,13 +140,13 @@ struct WebsiteController: RouteCollection {
         <script>
           (function() {
             var iframe = document.currentScript.previousElementSibling;
-            var url = window.location.href;
-            iframe.src = iframe.src + encodeURIComponent(url);
+            var path = window.location.pathname;
+            iframe.src = iframe.src + encodeURIComponent(path);
           })();
         </script>
         """
 
-        let standaloneLink = "\(embedBaseURL)?url="
+        let standaloneLink = "\(embedBaseURL)?path="
 
         struct WebsiteDetailContext: Encodable {
             let user: UserDTO
@@ -299,7 +299,7 @@ struct WebsiteController: RouteCollection {
         let pagesData = pages.map { page in
             PageWithCommentsDTO(
                 id: page.id,
-                url: page.url,
+                path: page.path,
                 createdAt: page.createdAt,
                 commentCount: page.comments.count
             )
@@ -340,7 +340,7 @@ struct WebsiteController: RouteCollection {
 
         struct CommentWithPage: Encodable {
             let id: UUID?
-            let pageUrl: String
+            let pagePath: String
             let authorName: String?
             let content: String
             let status: String
@@ -352,7 +352,7 @@ struct WebsiteController: RouteCollection {
             page.comments.map { comment in
                 CommentWithPage(
                     id: comment.id,
-                    pageUrl: page.url,
+                    pagePath: page.path,
                     authorName: comment.authorName,
                     content: comment.content,
                     status: comment.status.rawValue,
