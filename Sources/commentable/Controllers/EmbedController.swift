@@ -38,7 +38,7 @@ struct EmbedController: RouteCollection {
         let comments = try await Comment.query(on: req.db)
             .filter(\.$page.$id == page.requireID())
             .filter(\.$status == .approved)
-            .sort(\.$createdAt, .ascending)
+            .sort(\.$createdAt, .descending)
             .all()
 
         let publicComments = comments.map { comment in
@@ -123,24 +123,22 @@ struct EmbedController: RouteCollection {
             try await comment.save(on: req.db)
         } catch {
             req.logger.error("Moderation failed: \(error)")
-            comment.status = .rejected
-            comment.moderationResult = "Moderation system error"
-            comment.moderatedAt = Date()
+            // On moderation failure, mark as pending (not visible, but not rejected either)
+            comment.status = .pending
+            comment.moderationResult = "Moderation system error: \(error)"
+            comment.moderatedAt = nil
             try await comment.save(on: req.db)
         }
 
-        // Return response
-        if comment.status == .approved {
-            return try await req.view.render("comment-item", [
-                "comment": PublicCommentDTO(
-                    id: comment.id,
-                    authorName: comment.authorName,
-                    content: comment.content,
-                    createdAt: comment.createdAt
-                )
-            ]).encodeResponse(for: req)
-        } else {
-            throw Abort(.badRequest, reason: "Comment rejected by moderation")
-        }
+        // Always return success to the user, even if rejected or pending
+        // Show their comment optimistically (they'll see it, but others won't if not approved)
+        return try await req.view.render("comment-item", [
+            "comment": PublicCommentDTO(
+                id: comment.id,
+                authorName: comment.authorName,
+                content: comment.content,
+                createdAt: comment.createdAt
+            )
+        ]).encodeResponse(for: req)
     }
 }

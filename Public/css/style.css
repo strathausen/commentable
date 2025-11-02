@@ -685,3 +685,97 @@ a.btn-small:hover {
     font-size: 0.85rem;
     color: #666;
 }
+
+/* Collapsible Embed Section */
+.embed-sticky {
+    margin-bottom: 2rem;
+    border: 2px solid var(--black);
+    background: var(--white);
+}
+
+.embed-toggle {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: #f5f5f5;
+    border: none;
+    border-bottom: 2px solid var(--black);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.embed-toggle:hover {
+    background: #e8e8e8;
+}
+
+.toggle-icon {
+    transition: transform 0.2s;
+    font-size: 0.7rem;
+}
+
+.embed-toggle.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.embed-content {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.embed-content.collapsed {
+    max-height: 0;
+}
+
+.embed-content .embed-options {
+    padding: 1.5rem;
+}
+
+/* Tab Navigation */
+.tab-nav {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+    border-bottom: 4px solid var(--black);
+}
+
+.tab-button {
+    padding: 1rem 2rem;
+    background: #f5f5f5;
+    border: none;
+    border-right: 2px solid var(--black);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.1s;
+    font-size: 0.9rem;
+}
+
+.tab-button:last-child {
+    border-right: none;
+}
+
+.tab-button:hover {
+    background: #e8e8e8;
+}
+
+.tab-button.active {
+    background: var(--secondary);
+    color: var(--black);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}

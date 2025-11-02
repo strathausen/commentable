@@ -68,7 +68,7 @@
 
                 if (response.ok) {
                     const html = await response.text();
-                    commentsList.insertAdjacentHTML('beforeend', html);
+                    commentsList.insertAdjacentHTML('afterbegin', html);
                     form.reset();
                     errorDiv.textContent = '';
                 } else {

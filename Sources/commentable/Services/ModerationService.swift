@@ -15,9 +15,9 @@ struct ModerationService {
 
     struct OpenAIModerationRequest: Content {
         let input: String
-        let model: String
+        let model: String?
 
-        init(input: String, model: String = "omni-moderation-latest") {
+        init(input: String, model: String? = nil) {
             self.input = input
             self.model = model
         }
@@ -144,8 +144,8 @@ struct ModerationService {
             app.logger.error("OpenAI moderation API error: Status \(moderationResponse.status.code), Body: \(bodyString)")
 
             let errorBody = try? moderationResponse.content.decode(OpenAIErrorResponse.self)
-            let errorMessage = errorBody?.error.message ?? "Status \(moderationResponse.status.code)"
-            throw Abort(.internalServerError, reason: "OpenAI moderation API request failed: \(errorMessage)")
+            let errorMessage = errorBody?.error.message ?? bodyString
+            throw Abort(.badRequest, reason: "Moderation failed: \(errorMessage)")
         }
 
         let moderation = try moderationResponse.content.decode(OpenAIModerationResponse.self)

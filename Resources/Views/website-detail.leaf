@@ -12,127 +12,145 @@
                 </div>
             </header>
 
-            <!-- Embed Code Section -->
-            <section class="embed-section">
-                <h2>Integration</h2>
-                <div class="embed-options">
-                    <div class="embed-option">
-                        <h3>Embed Code (iframe)</h3>
-                        <pre><code id="embedCode">#(embedCode)</code></pre>
-                        <button class="btn-small" onclick="copyToClipboard('embedCode')">Copy Embed Code</button>
-                    </div>
-                    <div class="embed-option">
-                        <h3>Standalone Link</h3>
-                        <pre><code id="standaloneLink">#(standaloneLink)</code></pre>
-                        <button class="btn-small" onclick="copyToClipboard('standaloneLink')">Copy Link</button>
-                        <p class="warning">⚠️ Important: Add <code>?path=/your-page-path</code> parameter when using this link!</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Pages Section -->
-            <section class="pages-section">
-                <h2>Pages (#(pageCount))</h2>
-                #if(count(pages) > 0):
-                    <div class="pages-list">
-                        #for(page in pages):
-                            <div class="page-item">
-                                <span class="page-path">#(page.path)</span>
-                                <span class="page-comments">#(page.commentCount) comments</span>
-                            </div>
-                        #endfor
-                    </div>
-                #else:
-                    <p class="empty-state">No pages yet. Pages are created automatically when the embed is used.</p>
-                #endif
-            </section>
-
-            <!-- Comments Section -->
-            <section class="comments-section">
-                <div class="section-header">
-                    <h2>Comments (#(commentCount))</h2>
-                    <div class="filter-tabs">
-                        <button class="filter-tab active" data-filter="all">All</button>
-                        <button class="filter-tab" data-filter="pending">Pending</button>
-                        <button class="filter-tab" data-filter="approved">Approved</button>
-                        <button class="filter-tab" data-filter="rejected">Rejected</button>
+            <!-- Collapsible Embed Code Section -->
+            <div class="embed-sticky">
+                <button class="embed-toggle" id="embedToggle">
+                    <span class="toggle-icon">▼</span>
+                    Integration Code
+                </button>
+                <div class="embed-content" id="embedContent">
+                    <div class="embed-options">
+                        <div class="embed-option">
+                            <h3>Embed Code (iframe)</h3>
+                            <pre><code id="embedCode">#(embedCode)</code></pre>
+                            <button class="btn-small" onclick="copyToClipboard('embedCode')">Copy Embed Code</button>
+                        </div>
+                        <div class="embed-option">
+                            <h3>Standalone Link</h3>
+                            <pre><code id="standaloneLink">#(standaloneLink)</code></pre>
+                            <button class="btn-small" onclick="copyToClipboard('standaloneLink')">Copy Link</button>
+                            <p class="warning">⚠️ Important: Add <code>?path=/your-page-path</code> parameter when using this link!</p>
+                        </div>
                     </div>
                 </div>
-                #if(count(comments) > 0):
-                    <div class="comments-list-detail">
-                        #for(comment in comments):
-                            <div class="comment-card-detail" data-status="#(comment.status)">
-                                <div class="comment-header-row">
-                                    <div class="comment-left">
-                                        <span class="comment-status status-#(comment.status)">#(comment.status)</span>
-                                        #if(comment.manuallyModerated):
-                                            <span class="manual-badge-inline">Manual</span>
-                                        #endif
-                                        <span class="comment-author-inline">#if(comment.authorName):#(comment.authorName)#else:Anonymous#endif</span>
+            </div>
+
+            <!-- Tab Navigation -->
+            <nav class="tab-nav">
+                <button class="tab-button active" data-tab="comments">Comments</button>
+                <button class="tab-button" data-tab="moderation">Moderation</button>
+                <button class="tab-button" data-tab="pages">Pages</button>
+            </nav>
+
+            <!-- Comments Tab -->
+            <div class="tab-content active" id="tab-comments">
+                <section class="comments-section">
+                    <div class="section-header">
+                        <h2>Comments (#(commentCount))</h2>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-filter="all">All</button>
+                            <button class="filter-tab" data-filter="pending">Pending</button>
+                            <button class="filter-tab" data-filter="approved">Approved</button>
+                            <button class="filter-tab" data-filter="rejected">Rejected</button>
+                        </div>
+                    </div>
+                    #if(count(comments) > 0):
+                        <div class="comments-list-detail">
+                            #for(comment in comments):
+                                <div class="comment-card-detail" data-status="#(comment.status)">
+                                    <div class="comment-header-row">
+                                        <div class="comment-left">
+                                            <span class="comment-status status-#(comment.status)">#(comment.status)</span>
+                                            #if(comment.manuallyModerated):
+                                                <span class="manual-badge-inline">Manual</span>
+                                            #endif
+                                            <span class="comment-author-inline">#if(comment.authorName):#(comment.authorName)#else:Anonymous#endif</span>
+                                        </div>
+                                        <div class="comment-right">
+                                            <span class="comment-date-inline">#if(comment.createdAt):#date(comment.createdAt)#endif</span>
+                                        </div>
                                     </div>
-                                    <div class="comment-right">
-                                        <span class="comment-date-inline">#if(comment.createdAt):#date(comment.createdAt)#endif</span>
-                                    </div>
-                                </div>
-                                <div class="comment-content-main">#(comment.content)</div>
-                                <div class="comment-footer-row">
-                                    <span class="comment-page-inline">#(comment.pagePath)</span>
-                                    <div class="comment-actions-inline">
-                                        #if(comment.status != "approved"):
-                                            <button class="btn-action approve-comment" data-id="#(comment.id)">Approve</button>
-                                        #endif
-                                        #if(comment.status != "rejected"):
-                                            <button class="btn-action reject-comment" data-id="#(comment.id)">Reject</button>
-                                        #endif
+                                    <div class="comment-content-main">#(comment.content)</div>
+                                    <div class="comment-footer-row">
+                                        <span class="comment-page-inline">#(comment.pagePath)</span>
+                                        <div class="comment-actions-inline">
+                                            #if(comment.status != "approved"):
+                                                <button class="btn-action approve-comment" data-id="#(comment.id)">Approve</button>
+                                            #endif
+                                            #if(comment.status != "rejected"):
+                                                <button class="btn-action reject-comment" data-id="#(comment.id)">Reject</button>
+                                            #endif
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        #endfor
+                            #endfor
+                        </div>
+                    #else:
+                        <p class="empty-state">No comments yet.</p>
+                    #endif
+                </section>
+            </div>
+
+            <!-- Moderation Tab -->
+            <div class="tab-content" id="tab-moderation">
+                <section class="prompts-section">
+                    <div class="section-header">
+                        <h2>Moderation Prompts (#(promptCount))</h2>
+                        <button id="addPromptBtn" class="btn">Add Prompt</button>
                     </div>
-                #else:
-                    <p class="empty-state">No comments yet.</p>
-                #endif
-            </section>
 
-            <!-- Moderation Prompts Section -->
-            <section class="prompts-section">
-                <div class="section-header">
-                    <h2>Moderation Prompts (#(promptCount))</h2>
-                    <button id="addPromptBtn" class="btn">Add Prompt</button>
-                </div>
+                    <div class="info-box">
+                        <p>Custom prompts enforce specific rules for your community in addition to OpenAI's standard moderation.</p>
+                    </div>
 
-                <div class="info-box">
-                    <p>Custom prompts enforce specific rules for your community in addition to OpenAI's standard moderation.</p>
-                </div>
-
-                #if(count(prompts) > 0):
-                    <div class="prompts-list">
-                        #for(prompt in prompts):
-                            <div class="prompt-card">
-                                <div class="prompt-header">
-                                    <span class="prompt-status status-#if(prompt.isActive):active#else:inactive#endif">
-                                        #if(prompt.isActive):Active#else:Inactive#endif
-                                    </span>
-                                    <div class="prompt-actions">
-                                        <button class="btn-small toggle-prompt" data-id="#(prompt.id)" data-active="#(prompt.isActive)">
-                                            #if(prompt.isActive):Deactivate#else:Activate#endif
-                                        </button>
-                                        <button class="btn-small delete-prompt" data-id="#(prompt.id)">Delete</button>
+                    #if(count(prompts) > 0):
+                        <div class="prompts-list">
+                            #for(prompt in prompts):
+                                <div class="prompt-card">
+                                    <div class="prompt-header">
+                                        <span class="prompt-status status-#if(prompt.isActive):active#else:inactive#endif">
+                                            #if(prompt.isActive):Active#else:Inactive#endif
+                                        </span>
+                                        <div class="prompt-actions">
+                                            <button class="btn-small toggle-prompt" data-id="#(prompt.id)" data-active="#(prompt.isActive)">
+                                                #if(prompt.isActive):Deactivate#else:Activate#endif
+                                            </button>
+                                            <button class="btn-small delete-prompt" data-id="#(prompt.id)">Delete</button>
+                                        </div>
                                     </div>
+                                    <div class="prompt-content">#(prompt.prompt)</div>
                                 </div>
-                                <div class="prompt-content">#(prompt.prompt)</div>
-                            </div>
-                        #endfor
-                    </div>
+                            #endfor
+                        </div>
 
-                    <div class="rerun-section">
-                        <button id="rerunBtn" class="btn">Re-run Moderation on Pending Comments</button>
-                        <p class="help-text">Re-moderates pending comments. Manually moderated comments will not be affected.</p>
-                    </div>
-                #else:
-                    <p class="empty-state">No moderation prompts yet.</p>
-                #endif
-            </section>
+                        <div class="rerun-section">
+                            <button id="rerunBtn" class="btn">Re-run Moderation on Pending Comments</button>
+                            <p class="help-text">Re-moderates pending comments. Manually moderated comments will not be affected.</p>
+                        </div>
+                    #else:
+                        <p class="empty-state">No moderation prompts yet.</p>
+                    #endif
+                </section>
+            </div>
+
+            <!-- Pages Tab -->
+            <div class="tab-content" id="tab-pages">
+                <section class="pages-section">
+                    <h2>Pages (#(pageCount))</h2>
+                    #if(count(pages) > 0):
+                        <div class="pages-list">
+                            #for(page in pages):
+                                <div class="page-item">
+                                    <span class="page-path">#(page.path)</span>
+                                    <span class="page-comments">#(page.commentCount) comments</span>
+                                </div>
+                            #endfor
+                        </div>
+                    #else:
+                        <p class="empty-state">No pages yet. Pages are created automatically when the embed is used.</p>
+                    #endif
+                </section>
+            </div>
         </div>
 
         <!-- Add Prompt Modal -->
