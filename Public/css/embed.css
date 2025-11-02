@@ -145,3 +145,24 @@ button:active {
 .error:not(:empty) {
     display: block;
 }
+
+/* Embed Footer */
+.embed-footer {
+    margin-top: 3rem;
+    padding-top: 0;
+    text-align: center;
+}
+
+.embed-footer a {
+    color: #999;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: normal;
+    text-transform: lowercase;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+}
+
+.embed-footer a:hover {
+    color: #666;
+}

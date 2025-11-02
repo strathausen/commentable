@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>#if(title):#(title)#else:Commentable#endif</title>
+    <title>#if(title):#(title)#else:commentable.space#endif</title>
     <link rel="icon" type="image/svg+xml" href="/images/icon.svg">
     <link rel="stylesheet" href="/css/style.css">
 </head>

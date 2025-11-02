@@ -38,6 +38,10 @@
                 </div>
             #endfor
         </div>
+
+        <footer class="embed-footer">
+            <a href="https://commentable.space" target="_blank" rel="noopener">💬 comments by commentable.space</a>
+        </footer>
     </div>
 
     <script>
