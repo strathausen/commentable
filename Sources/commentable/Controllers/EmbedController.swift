@@ -60,6 +60,7 @@ struct EmbedController: RouteCollection {
             let comments: [PublicCommentDTO]
             let websiteDomain: String
             let style: String
+            let customCss: String
         }
 
         let context = EmbedContext(
@@ -67,7 +68,8 @@ struct EmbedController: RouteCollection {
             path: path,
             comments: publicComments,
             websiteDomain: website.domain,
-            style: style
+            style: style,
+            customCss: website.customCss
         )
         return try await req.view.render("embed", context).encodeResponse(for: req)
     }

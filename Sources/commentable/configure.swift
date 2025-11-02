@@ -35,6 +35,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(RenamePageUrlToPath())
     app.migrations.add(AddArchivedToWebsite())
     app.migrations.add(AddStyleToWebsite())
+    app.migrations.add(AddCustomCssToWebsite())
     app.migrations.add(CreateTodo())
 
     app.views.use(.leaf)

@@ -7,6 +7,7 @@ struct WebsiteDTO: Content {
     var name: String?
     var domain: String?
     var style: String?
+    var customCss: String?
     var createdAt: Date?
 }
 

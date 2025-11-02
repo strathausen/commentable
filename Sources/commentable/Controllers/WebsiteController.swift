@@ -19,6 +19,9 @@ struct WebsiteController: RouteCollection {
             website.post("archive", use: self.archive)
             website.post("restore", use: self.restore)
             website.patch("style", use: self.updateStyle)
+            website.patch("custom-css", use: self.updateCustomCss)
+            website.get("pages", use: self.pages)
+            website.get("comments", use: self.comments)
             website.post("comments", ":commentID", "moderate", use: self.moderateComment)
         }
     }
@@ -322,6 +325,30 @@ struct WebsiteController: RouteCollection {
         }
 
         website.style = updateData.style
+        try await website.save(on: req.db)
+        return .noContent
+    }
+
+    @Sendable
+    func updateCustomCss(req: Request) async throws -> HTTPStatus {
+        let user = try req.auth.require(User.self)
+        let userID = try user.requireID()
+
+        guard let website = try await Website.find(req.parameters.get("websiteID"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        guard website.$user.id == userID else {
+            throw Abort(.forbidden)
+        }
+
+        struct UpdateCustomCssRequest: Content {
+            let customCss: String
+        }
+
+        let updateData = try req.content.decode(UpdateCustomCssRequest.self)
+
+        website.customCss = updateData.customCss
         try await website.save(on: req.db)
         return .noContent
     }

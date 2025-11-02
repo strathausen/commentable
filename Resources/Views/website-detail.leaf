@@ -158,7 +158,6 @@
                 <section class="style-section">
                     <div class="style-selector-container">
                         <div class="style-options">
-                            <h2>Choose a Style</h2>
                             <p class="style-description">Select a pre-designed theme for your comment widget.</p>
 
                             <div class="style-list">
@@ -189,6 +188,23 @@
 
                             <button id="saveStyleBtn" class="btn">Save Style</button>
                             <div id="styleError" class="error"></div>
+
+                            <p class="style-description" style="margin-top: 2rem;">Add custom CSS to override or extend the selected style.</p>
+
+                            <textarea
+                                id="customCss"
+                                class="custom-css-editor"
+                                placeholder="/* Add your custom CSS here */
+.comments-title {
+    color: #ff6b00;
+}
+
+.comment-item {
+    border-radius: 8px;
+}">#(website.customCss)</textarea>
+
+                            <button id="saveCustomCssBtn" class="btn">Save Custom CSS</button>
+                            <div id="customCssError" class="error"></div>
                         </div>
 
                         <div class="style-preview-live">

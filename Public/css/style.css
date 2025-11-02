@@ -908,6 +908,23 @@ a.btn-small:hover {
     color: #666;
 }
 
+.custom-css-editor {
+    width: 100%;
+    min-height: 200px;
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    border: var(--border);
+    background: #f5f5f5;
+    margin-bottom: 1rem;
+    resize: vertical;
+}
+
+.custom-css-editor:focus {
+    outline: none;
+    background: var(--white);
+}
+
 .style-preview-live {
     position: sticky;
     top: 120px;

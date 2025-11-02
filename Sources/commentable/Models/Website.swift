@@ -23,6 +23,9 @@ final class Website: Model, @unchecked Sendable {
     @Field(key: "style")
     var style: String
 
+    @Field(key: "custom_css")
+    var customCss: String
+
     @Timestamp(key: "created_at", on: .create)
     var createdAt: Date?
 
@@ -34,13 +37,14 @@ final class Website: Model, @unchecked Sendable {
 
     init() { }
 
-    init(id: UUID? = nil, userID: UUID, name: String, domain: String, archived: Bool = false, style: String = "commentable") {
+    init(id: UUID? = nil, userID: UUID, name: String, domain: String, archived: Bool = false, style: String = "commentable", customCss: String = "") {
         self.id = id
         self.$user.id = userID
         self.name = name
         self.domain = domain
         self.archived = archived
         self.style = style
+        self.customCss = customCss
     }
 
     func toDTO() -> WebsiteDTO {
@@ -50,6 +54,7 @@ final class Website: Model, @unchecked Sendable {
             name: self.$name.value,
             domain: self.$domain.value,
             style: self.$style.value,
+            customCss: self.$customCss.value,
             createdAt: self.createdAt
         )
     }

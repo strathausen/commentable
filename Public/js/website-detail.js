@@ -283,3 +283,55 @@ if (saveStyleBtn) {
         }
     };
 }
+
+// Custom CSS editor
+const saveCustomCssBtn = document.getElementById('saveCustomCssBtn');
+if (saveCustomCssBtn) {
+    const customCssInput = document.getElementById('customCss');
+    const previewFrame = document.getElementById('stylePreviewFrame');
+
+    // Debounce function for live preview
+    let debounceTimer;
+    customCssInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            // Trigger preview reload with custom CSS
+            const currentSrc = previewFrame.src;
+            previewFrame.src = currentSrc;
+        }, 1000);
+    });
+
+    // Save custom CSS
+    saveCustomCssBtn.onclick = async () => {
+        const customCss = customCssInput.value;
+        const errorDiv = document.getElementById('customCssError');
+
+        try {
+            const response = await fetch(`/websites/${websiteId}/custom-css`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customCss })
+            });
+
+            if (response.ok) {
+                errorDiv.style.display = 'none';
+                saveCustomCssBtn.textContent = 'Saved!';
+
+                // Refresh preview
+                const currentSrc = previewFrame.src;
+                previewFrame.src = currentSrc;
+
+                setTimeout(() => {
+                    saveCustomCssBtn.textContent = 'Save Custom CSS';
+                }, 2000);
+            } else {
+                const error = await response.json();
+                errorDiv.textContent = error.reason || 'Failed to save custom CSS';
+                errorDiv.style.display = 'block';
+            }
+        } catch (err) {
+            errorDiv.textContent = 'Network error';
+            errorDiv.style.display = 'block';
+        }
+    };
+}
