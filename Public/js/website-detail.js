@@ -1,21 +1,5 @@
 const websiteId = window.location.pathname.split('/')[2];
 
-// Tab Navigation
-document.querySelectorAll('.tab-button').forEach(button => {
-    button.onclick = () => {
-        // Remove active from all tabs and content
-        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-        // Add active to clicked tab
-        button.classList.add('active');
-
-        // Show corresponding content
-        const tabId = 'tab-' + button.dataset.tab;
-        document.getElementById(tabId).classList.add('active');
-    };
-});
-
 // Collapsible Embed Section
 const embedToggle = document.getElementById('embedToggle');
 const embedContent = document.getElementById('embedContent');

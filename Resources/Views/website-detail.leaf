@@ -37,14 +37,14 @@
 
             <!-- Tab Navigation -->
             <nav class="tab-nav">
-                <button class="tab-button active" data-tab="comments">Comments</button>
-                <button class="tab-button" data-tab="moderation">Moderation</button>
-                <button class="tab-button" data-tab="pages">Pages</button>
-                <button class="tab-button" data-tab="style">Style</button>
+                <a href="/websites/#(website.id)/comments" class="tab-button #if(activeTab == "comments"):active#endif">Comments</a>
+                <a href="/websites/#(website.id)/moderation" class="tab-button #if(activeTab == "moderation"):active#endif">Moderation</a>
+                <a href="/websites/#(website.id)/pages" class="tab-button #if(activeTab == "pages"):active#endif">Pages</a>
+                <a href="/websites/#(website.id)/style" class="tab-button #if(activeTab == "style"):active#endif">Style</a>
             </nav>
 
             <!-- Comments Tab -->
-            <div class="tab-content active" id="tab-comments">
+            <div class="tab-content #if(activeTab == "comments"):active#endif" id="tab-comments">
                 <section class="comments-section">
                     <div class="section-header">
                         <h2>Comments (#(commentCount))</h2>
@@ -93,7 +93,7 @@
             </div>
 
             <!-- Moderation Tab -->
-            <div class="tab-content" id="tab-moderation">
+            <div class="tab-content #if(activeTab == "moderation"):active#endif" id="tab-moderation">
                 <section class="prompts-section">
                     <div class="section-header">
                         <h2>Moderation Prompts (#(promptCount))</h2>
@@ -135,7 +135,7 @@
             </div>
 
             <!-- Pages Tab -->
-            <div class="tab-content" id="tab-pages">
+            <div class="tab-content #if(activeTab == "pages"):active#endif" id="tab-pages">
                 <section class="pages-section">
                     <h2>Pages (#(pageCount))</h2>
                     #if(count(pages) > 0):
@@ -154,7 +154,7 @@
             </div>
 
             <!-- Style Tab -->
-            <div class="tab-content" id="tab-style">
+            <div class="tab-content #if(activeTab == "style"):active#endif" id="tab-style">
                 <section class="style-section">
                     <div class="style-selector-container">
                         <div class="style-options">

@@ -10,13 +10,15 @@ struct WebsiteController: RouteCollection {
         protected.post(use: self.create)
         protected.group(":websiteID") { website in
             website.get(use: self.show)
+            website.get("comments", use: self.showComments)
+            website.get("moderation", use: self.showModeration)
+            website.get("pages", use: self.showPages)
+            website.get("style", use: self.showStyle)
             website.patch(use: self.update)
             website.delete(use: self.delete)
             website.post("archive", use: self.archive)
             website.post("restore", use: self.restore)
             website.patch("style", use: self.updateStyle)
-            website.get("pages", use: self.pages)
-            website.get("comments", use: self.comments)
             website.post("comments", ":commentID", "moderate", use: self.moderateComment)
         }
     }
@@ -60,7 +62,35 @@ struct WebsiteController: RouteCollection {
     }
 
     @Sendable
-    func show(req: Request) async throws -> View {
+    func show(req: Request) async throws -> Response {
+        // Redirect to the comments tab by default
+        guard let websiteID: UUID = req.parameters.get("websiteID") else {
+            throw Abort(.badRequest)
+        }
+        return req.redirect(to: "/websites/\(websiteID)/comments")
+    }
+
+    @Sendable
+    func showComments(req: Request) async throws -> View {
+        return try await renderWebsiteDetail(req: req, activeTab: "comments")
+    }
+
+    @Sendable
+    func showModeration(req: Request) async throws -> View {
+        return try await renderWebsiteDetail(req: req, activeTab: "moderation")
+    }
+
+    @Sendable
+    func showPages(req: Request) async throws -> View {
+        return try await renderWebsiteDetail(req: req, activeTab: "pages")
+    }
+
+    @Sendable
+    func showStyle(req: Request) async throws -> View {
+        return try await renderWebsiteDetail(req: req, activeTab: "style")
+    }
+
+    private func renderWebsiteDetail(req: Request, activeTab: String) async throws -> View {
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
 
@@ -161,6 +191,7 @@ struct WebsiteController: RouteCollection {
             let promptCount: Int
             let embedCode: String
             let standaloneLink: String
+            let activeTab: String
         }
 
         let context = WebsiteDetailContext(
@@ -173,7 +204,8 @@ struct WebsiteController: RouteCollection {
             commentCount: commentsWithPages.count,
             promptCount: prompts.count,
             embedCode: embedCode,
-            standaloneLink: standaloneLink
+            standaloneLink: standaloneLink,
+            activeTab: activeTab
         )
 
         return try await req.view.render("website-detail", context)
@@ -326,104 +358,5 @@ struct WebsiteController: RouteCollection {
         }
 
         return .noContent
-    }
-
-    @Sendable
-    func pages(req: Request) async throws -> View {
-        let user = try req.auth.require(User.self)
-        let userID = try user.requireID()
-
-        guard let website = try await Website.find(req.parameters.get("websiteID"), on: req.db) else {
-            throw Abort(.notFound)
-        }
-
-        guard website.$user.id == userID else {
-            throw Abort(.forbidden)
-        }
-
-        let pages = try await Page.query(on: req.db)
-            .filter(\.$website.$id == website.requireID())
-            .with(\.$comments)
-            .all()
-
-        let pagesData = pages.map { page in
-            PageWithCommentsDTO(
-                id: page.id,
-                path: page.path,
-                createdAt: page.createdAt,
-                commentCount: page.comments.count
-            )
-        }
-
-        struct PagesContext: Encodable {
-            let user: UserDTO
-            let website: WebsiteDTO
-            let pages: [PageWithCommentsDTO]
-        }
-
-        let context = PagesContext(
-            user: user.toDTO(),
-            website: website.toDTO(),
-            pages: pagesData
-        )
-
-        return try await req.view.render("pages", context)
-    }
-
-    @Sendable
-    func comments(req: Request) async throws -> View {
-        let user = try req.auth.require(User.self)
-        let userID = try user.requireID()
-
-        guard let website = try await Website.find(req.parameters.get("websiteID"), on: req.db) else {
-            throw Abort(.notFound)
-        }
-
-        guard website.$user.id == userID else {
-            throw Abort(.forbidden)
-        }
-
-        let pages = try await Page.query(on: req.db)
-            .filter(\.$website.$id == website.requireID())
-            .with(\.$comments)
-            .all()
-
-        struct CommentWithPage: Encodable {
-            let id: UUID?
-            let pagePath: String
-            let authorName: String?
-            let content: String
-            let status: String
-            let moderationResult: String?
-            let createdAt: Date?
-        }
-
-        let commentsWithPages = pages.flatMap { page -> [CommentWithPage] in
-            page.comments.map { comment in
-                CommentWithPage(
-                    id: comment.id,
-                    pagePath: page.path,
-                    authorName: comment.authorName,
-                    content: comment.content,
-                    status: comment.status.rawValue,
-                    moderationResult: comment.moderationResult,
-                    createdAt: comment.createdAt
-                )
-            }
-        }.sorted { ($0.createdAt ?? Date.distantPast) > ($1.createdAt ?? Date.distantPast) }
-
-        struct CommentsContext: Encodable {
-            let user: UserDTO
-            let website: WebsiteDTO
-            let comments: [CommentWithPage]
-        }
-
-        let context = CommentsContext(
-            user: user.toDTO(),
-            website: website.toDTO(),
-            comments: commentsWithPages
-        )
-
-        return try await req.view.render("comments", context)
     }
 }
