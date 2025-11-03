@@ -462,6 +462,14 @@ a.btn-small:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
+}
+
+.page-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
 }
 
 .page-path {
@@ -472,6 +480,12 @@ a.btn-small:hover {
 .page-comments {
     font-size: 0.9rem;
     color: #666;
+}
+
+.page-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .comments-list-detail {

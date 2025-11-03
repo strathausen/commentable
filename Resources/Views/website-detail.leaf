@@ -142,8 +142,14 @@
                         <div class="pages-list">
                             #for(page in pages):
                                 <div class="page-item">
-                                    <span class="page-path">#(page.path)</span>
-                                    <span class="page-comments">#(page.commentCount) comments</span>
+                                    <div class="page-info">
+                                        <span class="page-path">#(page.path)</span>
+                                        <span class="page-comments">#(page.commentCount) comments</span>
+                                    </div>
+                                    <div class="page-actions">
+                                        <a href="/embed/#(website.id)?path=#(page.path)" target="_blank" class="btn-small">Visit</a>
+                                        <button class="btn-small delete-page" data-id="#(page.id)" data-path="#(page.path)">Delete</button>
+                                    </div>
                                 </div>
                             #endfor
                         </div>

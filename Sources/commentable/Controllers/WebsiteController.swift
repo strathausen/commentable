@@ -20,6 +20,7 @@ struct WebsiteController: RouteCollection {
             website.post("restore", use: self.restore)
             website.patch("style", use: self.updateStyle)
             website.patch("custom-css", use: self.updateCustomCss)
+            website.delete("pages", ":pageID", use: self.deletePage)
             website.get("pages", use: self.pages)
             website.get("comments", use: self.comments)
             website.post("comments", ":commentID", "moderate", use: self.moderateComment)
@@ -385,5 +386,145 @@ struct WebsiteController: RouteCollection {
         }
 
         return .noContent
+    }
+
+    @Sendable
+    func deletePage(req: Request) async throws -> HTTPStatus {
+        let user = try req.auth.require(User.self)
+        let userID = try user.requireID()
+
+        guard let website = try await Website.find(req.parameters.get("websiteID"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        guard website.$user.id == userID else {
+            throw Abort(.forbidden)
+        }
+
+        guard let page = try await Page.find(req.parameters.get("pageID"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        // Verify page belongs to this website
+        guard page.$website.id == website.id else {
+            throw Abort(.forbidden)
+        }
+
+        // Create audit log
+        let auditLog = AuditLog(
+            userID: userID,
+            action: "delete_page",
+            entityType: "page",
+            entityId: page.id,
+            metadata: [
+                "website_id": website.id?.uuidString ?? "",
+                "path": page.path
+            ]
+        )
+        try await auditLog.save(on: req.db)
+
+        // Delete the page (and associated comments via cascade)
+        try await page.delete(on: req.db)
+
+        return .noContent
+    }
+
+    @Sendable
+    func pages(req: Request) async throws -> View {
+        let user = try req.auth.require(User.self)
+        let userID = try user.requireID()
+
+        guard let website = try await Website.find(req.parameters.get("websiteID"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        guard website.$user.id == userID else {
+            throw Abort(.forbidden)
+        }
+
+        let pages = try await Page.query(on: req.db)
+            .filter(\.$website.$id == website.requireID())
+            .with(\.$comments)
+            .all()
+
+        let pagesData = pages.map { page in
+            PageWithCommentsDTO(
+                id: page.id,
+                path: page.path,
+                createdAt: page.createdAt,
+                commentCount: page.comments.count
+            )
+        }
+
+        struct PagesContext: Encodable {
+            let user: UserDTO
+            let website: WebsiteDTO
+            let pages: [PageWithCommentsDTO]
+        }
+
+        let context = PagesContext(
+            user: user.toDTO(),
+            website: website.toDTO(),
+            pages: pagesData
+        )
+
+        return try await req.view.render("pages", context)
+    }
+
+    @Sendable
+    func comments(req: Request) async throws -> View {
+        let user = try req.auth.require(User.self)
+        let userID = try user.requireID()
+
+        guard let website = try await Website.find(req.parameters.get("websiteID"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        guard website.$user.id == userID else {
+            throw Abort(.forbidden)
+        }
+
+        let pages = try await Page.query(on: req.db)
+            .filter(\.$website.$id == website.requireID())
+            .with(\.$comments)
+            .all()
+
+        struct CommentWithPage: Encodable {
+            let id: UUID?
+            let pagePath: String
+            let authorName: String?
+            let content: String
+            let status: String
+            let moderationResult: String?
+            let createdAt: Date?
+        }
+
+        let commentsWithPages = pages.flatMap { page -> [CommentWithPage] in
+            page.comments.map { comment in
+                CommentWithPage(
+                    id: comment.id,
+                    pagePath: page.path,
+                    authorName: comment.authorName,
+                    content: comment.content,
+                    status: comment.status.rawValue,
+                    moderationResult: comment.moderationResult,
+                    createdAt: comment.createdAt
+                )
+            }
+        }.sorted { ($0.createdAt ?? Date.distantPast) > ($1.createdAt ?? Date.distantPast) }
+
+        struct CommentsContext: Encodable {
+            let user: UserDTO
+            let website: WebsiteDTO
+            let comments: [CommentWithPage]
+        }
+
+        let context = CommentsContext(
+            user: user.toDTO(),
+            website: website.toDTO(),
+            comments: commentsWithPages
+        )
+
+        return try await req.view.render("comments", context)
     }
 }

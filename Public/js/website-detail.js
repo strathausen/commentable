@@ -335,3 +335,27 @@ if (saveCustomCssBtn) {
         }
     };
 }
+
+// Delete page
+document.querySelectorAll('.delete-page').forEach(btn => {
+    btn.onclick = async () => {
+        const pageId = btn.dataset.id;
+        const pagePath = btn.dataset.path;
+
+        if (!confirm(`Delete page "${pagePath}" and all its comments?`)) return;
+
+        try {
+            const response = await fetch(`/websites/${websiteId}/pages/${pageId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to delete page');
+            }
+        } catch (err) {
+            alert('Network error');
+        }
+    };
+});
