@@ -129,8 +129,20 @@ struct ModerationService {
             throw Abort(.internalServerError, reason: "OpenAI API key not configured")
         }
 
+        // Sanitize and wrap content in XML structure
+        let authorName = comment.authorName ?? "Anonymous"
+        let sanitizedAuthor = sanitizeForXML(authorName)
+        let sanitizedContent = sanitizeForXML(comment.content)
+
+        let xmlWrappedContent = """
+        <user_submission>
+        <author>\(sanitizedAuthor)</author>
+        <comment>\(sanitizedContent)</comment>
+        </user_submission>
+        """
+
         // First, run OpenAI moderation
-        let moderationRequest = OpenAIModerationRequest(input: comment.content)
+        let moderationRequest = OpenAIModerationRequest(input: xmlWrappedContent)
 
         let moderationResponse = try await app.client.post(URI(string: "https://api.openai.com/v1/moderations"), headers: [
             "Authorization": "Bearer \(apiKey)",
@@ -162,13 +174,22 @@ struct ModerationService {
 
         // If custom prompts exist, run additional moderation
         if !customPrompts.isEmpty {
-            let customResult = try await runCustomModeration(comment.content, prompts: customPrompts, apiKey: apiKey)
+            let customResult = try await runCustomModeration(xmlWrappedContent, prompts: customPrompts, apiKey: apiKey)
             if !customResult.approved {
                 return (false, "Rejected by custom moderation: \(customResult.reason)")
             }
         }
 
         return (true, "Approved")
+    }
+
+    private func sanitizeForXML(_ text: String) -> String {
+        return text
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+            .replacingOccurrences(of: "\"", with: "&quot;")
+            .replacingOccurrences(of: "'", with: "&apos;")
     }
 
     private func getFlaggedCategories(_ categories: OpenAIModerationResponse.ModerationResult.Categories) -> [String] {
