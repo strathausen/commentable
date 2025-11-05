@@ -2,12 +2,8 @@ import Fluent
 import Vapor
 
 func routes(_ app: Application) throws {
-    // Redirect root to dashboard (will redirect to login if not authenticated)
-    app.get { req async throws -> Response in
-        return req.redirect(to: "/dashboard")
-    }
-
     // Register controllers
+    try app.register(collection: StaticPagesController()) // Must be first for root route
     try app.register(collection: AuthViewController())
     try app.register(collection: AuthController())
     try app.register(collection: DashboardController())

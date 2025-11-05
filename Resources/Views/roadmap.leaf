@@ -1,0 +1,56 @@
+#extend("base"):
+    #export("body"):
+        <div class="container content-page">
+            <h1>Roadmap</h1>
+
+            <section>
+                <h2>Current Features (v1.0)</h2>
+                <ul class="roadmap-list completed">
+                    <li>✅ User authentication and registration</li>
+                    <li>✅ Website and page management</li>
+                    <li>✅ Comment submission and display</li>
+                    <li>✅ AI-powered content moderation</li>
+                    <li>✅ Customizable moderation prompts</li>
+                    <li>✅ Embed code generation</li>
+                    <li>✅ Audit logging</li>
+                    <li>✅ Archive/restore functionality</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>In Progress</h2>
+                <ul class="roadmap-list in-progress">
+                    <li>🔄 Enhanced dashboard UI</li>
+                    <li>🔄 Comment threading and replies</li>
+                    <li>🔄 Email notifications</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Planned Features</h2>
+                <ul class="roadmap-list planned">
+                    <li>📋 Rich text editor for comments</li>
+                    <li>📋 User reputation system</li>
+                    <li>📋 Advanced analytics</li>
+                    <li>📋 Custom styling options</li>
+                    <li>📋 API for third-party integrations</li>
+                    <li>📋 Rate limiting and abuse prevention</li>
+                    <li>📋 Multiple authentication providers</li>
+                    <li>📋 Export/import functionality</li>
+                    <li>📋 Webhook support</li>
+                    <li>📋 Multi-language support</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Long-term Vision</h2>
+                <ul class="roadmap-list future">
+                    <li>🔮 Mobile apps for moderation</li>
+                    <li>🔮 Advanced AI features (sentiment analysis, topic detection)</li>
+                    <li>🔮 Collaborative moderation tools</li>
+                    <li>🔮 Plugin ecosystem</li>
+                </ul>
+            </section>
+        </div>
+    #endexport
+#endextend

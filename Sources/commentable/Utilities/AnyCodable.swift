@@ -7,7 +7,7 @@ struct AnyCodable: Codable {
         self.value = value
     }
 
-    init(from decoder: Decoder) throws {
+    init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
 
         if let bool = try? container.decode(Bool.self) {
@@ -27,7 +27,7 @@ struct AnyCodable: Codable {
         }
     }
 
-    func encode(to encoder: Encoder) throws {
+    func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
 
         switch value {

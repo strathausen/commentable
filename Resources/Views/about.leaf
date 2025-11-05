@@ -1,0 +1,32 @@
+#extend("base"):
+    #export("body"):
+        <div class="container content-page">
+            <h1>About commentable.space</h1>
+
+            <section>
+                <h2>What is commentable.space?</h2>
+                <p>commentable.space is a privacy-first commenting platform that helps website owners add intelligent, moderated comments to their sites without compromising on data ownership or user privacy.</p>
+            </section>
+
+            <section>
+                <h2>Our Mission</h2>
+                <p>We believe in giving website owners complete control over their commenting system while protecting user privacy. Unlike traditional third-party commenting platforms, commentable.space can be self-hosted, ensuring your data stays yours.</p>
+            </section>
+
+            <section>
+                <h2>Key Features</h2>
+                <ul>
+                    <li><strong>AI-Powered Moderation:</strong> Automatically filter spam and inappropriate content using customizable moderation prompts powered by OpenAI.</li>
+                    <li><strong>Privacy-First Design:</strong> Self-hosted solution that gives you complete control over your data.</li>
+                    <li><strong>Easy Integration:</strong> Add comments to any page with a simple embed code.</li>
+                    <li><strong>Flexible Management:</strong> Manage multiple websites, pages, and moderation rules from a single dashboard.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Technology</h2>
+                <p>Built with modern technologies including Swift/Vapor for the backend, PostgreSQL for data storage, and OpenAI for intelligent content moderation.</p>
+            </section>
+        </div>
+    #endexport
+#endextend

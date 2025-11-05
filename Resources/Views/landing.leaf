@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>commentable.space - Comments for your website</title>
+    <link rel="icon" type="image/svg+xml" href="/images/icon.svg">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="/" class="logo-link">
+                <img src="/images/logo.svg" alt="Commentable" class="logo">
+            </a>
+            <nav class="main-nav">
+                <a href="/about" class="nav-link">About</a>
+                <a href="/roadmap" class="nav-link">Roadmap</a>
+                <a href="/login" class="nav-link">Login</a>
+                <a href="/register" class="btn-small">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="landing-main">
+        <section class="hero-section">
+            <div class="container">
+                <h1>Comments for your website</h1>
+                <p class="hero-subtitle">Self-hosted with AI moderation.</p>
+                <div class="hero-actions">
+                    <a href="/register" class="btn btn-large">Get Started</a>
+                    <a href="/about" class="btn-outline btn-large">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>AI Moderation</h3>
+                        <p>Filter spam and inappropriate content.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Self-hosted</h3>
+                        <p>You control your data.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Simple Integration</h3>
+                        <p>Add comments with an embed code.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Customizable</h3>
+                        <p>Tailor moderation rules and styles.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    #extend("footer")
+</body>
+</html>

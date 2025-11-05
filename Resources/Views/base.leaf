@@ -23,6 +23,7 @@
         </div>
     </header>
     #import("body")
+    #extend("footer")
     #if(user):
         <script>
             const globalLogoutBtn = document.getElementById('globalLogoutBtn');
