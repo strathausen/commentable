@@ -29,7 +29,8 @@ RUN mkdir /staging
 
 # Build the application, with optimizations, with static linking, and using jemalloc
 # N.B.: The static version of jemalloc is incompatible with the static Swift runtime.
-RUN swift build -c release \
+RUN --mount=type=cache,target=/build/.build \
+    swift build -c release \
         --product commentable \
         --static-swift-stdlib \
         -Xlinker -ljemalloc && \
