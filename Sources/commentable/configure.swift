@@ -36,7 +36,7 @@ private func parseDatabaseURL(_ urlString: String) throws -> SQLPostgresConfigur
         username: username,
         password: password,
         database: database,
-        tls: .prefer(.init(configuration: .clientDefault))
+        tls: .disable
     )
 }
 
@@ -62,7 +62,7 @@ public func configure(_ app: Application) async throws {
             username: Environment.get("DATABASE_USERNAME") ?? "postgres",
             password: Environment.get("DATABASE_PASSWORD") ?? "",
             database: Environment.get("DATABASE_NAME") ?? "commentable",
-            tls: .prefer(try .init(configuration: .clientDefault))
+            tls: .disable
         )
     }
 
